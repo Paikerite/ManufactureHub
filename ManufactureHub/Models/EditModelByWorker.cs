@@ -1,0 +1,16 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ESchedule.Models
+{
+    public class EditModelByWorker
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public string? ProfilePicture { get; set; }
+
+        [Required(ErrorMessage = "Не вказан пароль")]
+        [DataType(DataType.Password)]
+        public string? Password { get; set; }
+    }
+}

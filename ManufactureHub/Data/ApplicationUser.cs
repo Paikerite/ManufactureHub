@@ -17,12 +17,14 @@ namespace ManufactureHub.Data
         public string PatronymicName { get; set; }
         public string? ProfilePicture { get; set; }
 
-        [Required(ErrorMessage = "Не вказано до якого виробництво відноситься")]
-        [MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
-        public string Department { get; set; } // Відділ (наприклад, "Виробництво", "IT", "Бухгалтерія")
+        //[Required(ErrorMessage = "Не вказано до якого виробництво відноситься")]
+        //[MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
+        //public string Department { get; set; } // Відділ (наприклад, "Виробництво", "IT", "Бухгалтерія")
+
         [Required(ErrorMessage = "Не вказана посада")]
         [MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
         public string Position { get; set; } // Посада (наприклад, "Системний адміністратор")
+
         public DateTime EmploymentDate { get; set; } // Дата прийому на роботу
 
         // Права доступу та ролі
@@ -32,6 +34,6 @@ namespace ManufactureHub.Data
         public DateTime LastLoginDate { get; set; } // Останній вхід в систему
         public string LastLoginIP { get; set; } // IP-адреса останнього входу
 
-        //public List<ClassViewModel> Classes { get; set; } = new();
+        public List<SectionViewModel> Sections { get; set; }
     }
 }
