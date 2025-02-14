@@ -1,5 +1,4 @@
-﻿using ESchedule.Models.Enums;
-using ManufactureHub.Data.Enums;
+﻿using ManufactureHub.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ESchedule.Models
