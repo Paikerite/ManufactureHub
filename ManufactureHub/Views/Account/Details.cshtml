@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model ManufactureHub.Data.ApplicationUser
+@inject UserManager<ApplicationUser> userManager;
+
+@{
+    ViewData["Title"] = "Інформація про акаунт";
+    ApplicationUser user = new();
+    IEnumerable<string> roleUser = Enumerable.Empty<string>();
+    if (User.Identity.IsAuthenticated)
+    {
+        user = await userManager.FindByEmailAsync(User.Identity.Name);
+        roleUser = await userManager.GetRolesAsync(user);
+    }
+}
+<div class="container">
+    <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="hstack">
+@*                    <img src="~/AvatarsImages/@Model.ProfilePicture"/>*@
+                    <div class="col text-center">
+                        <h2 class="fw-bold">@Model.Name @Model.SurName @Model.PatronymicName</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4 align-self-center text-center" style="max-width: 250px;">
+                    <img class="img-fluid" src="~/@Model.ProfilePicture"/>
+                </div>
+                <div class="col-8">
+                    <div class="card-text">
+                        <p>ПІБ: @Model.Name @Model.SurName @Model.PatronymicName</p>
+                        <p>Роль у системі: @roleUser.FirstOrDefault();</p>
+                        <p>Пошта: @Model.Email</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col">
+                    @if (user.Id == Model.Id)
+                    {
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model?.Id" asp-route-userName="@User.Identity.Name">Відредагувати</a>
+                        <a class="btn btn-success" asp-action="ForgotPassword">Змінити пароль</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id" asp-route-userName="@User.Identity.Name">Видалити акаунт</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

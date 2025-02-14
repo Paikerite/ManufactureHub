@@ -1,0 +1,61 @@
+﻿@model ESchedule.Models.LoginModel
+@{
+    ViewData["Title"] = "Ввійти";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card" style="border-radius: 25px;">
+                <div class="card-header text-center" style="border-top-left-radius: 25px; border-top-right-radius:25px; background-color:#6efafb">
+                    <div class="hstack">
+                        <span class="material-icons md-36 me-3">
+                            person
+                        </span>
+                        <h1 class="h3 m-0">
+                            Увійти в обліковий запис ESchedule
+                        </h1>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Login" asp-antiforgery="true">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="email" asp-for="Email" class="form-control" id="InputUserName" placeholder="Пошта" />
+                                <label asp-for="Email" for="InputUserName" class="form-label">Пошта</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="password" asp-for="Password" class="form-control" id="InputPassword" placeholder="Пароль" />
+                                <label for="InputPassword" asp-for="Password" class="form-label">Пароль</label>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" class="form-check-input"/>
+                            <label class="form-floating form-check-label">
+                                Запам'ятати мене
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-secondary w-100">Увійти</button>
+                        <hr />
+                        <div class="text-center">
+                            <span>Не має облікового запису? <a asp-area="" asp-controller="Account" asp-action="Create" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Зареєструйтесь!</a></span>
+                            <span>Забули пароль? <a asp-area="" asp-controller="Account" asp-action="ForgotPassword" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Скинути</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

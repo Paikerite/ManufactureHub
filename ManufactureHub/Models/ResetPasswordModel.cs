@@ -16,5 +16,8 @@ namespace ManufactureHub.Models
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Паролі не співпадають")]
         public string? ConfirmPassword { get; set; }
+
+        [Required]
+        public string? Code { get; set; }
     }
 }
