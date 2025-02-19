@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    ApplicationUser CurrentUser = new ApplicationUser();
+    if (signInManager.IsSignedIn(User))
+    {
+        CurrentUser = await userManager.GetUserAsync(User);
+    }
+}
+
+@* <ul class="navbar-nav"> *@
+    @if (signInManager.IsSignedIn(User))
+    {
+        <div class="btn-group dropdown-center">
+            <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id">
+                <img src="~/@CurrentUser.ProfilePicture" alt="" width="32" height="32" class="rounded-circle me-2">
+                @CurrentUser.SurName[0]. @CurrentUser.Name[0]. @CurrentUser.PatronymicName
+            </a>
+            <a href="#" class="d-flex align-items-center btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--bs-primary); border-color:var(--bs-primary); color:black;">
+            </a>
+            <ul class="dropdown-menu text-small shadow">
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Edit" asp-route-id="@CurrentUser.Id">Налаштування</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id">Профіль</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Вийти</a></li>
+            </ul>
+
+        </div>
+    }
+    else
+    {
+        <a asp-area="" asp-controller="Account" asp-action="Login" class="d-flex align-items-center btn btn-primary" aria-expanded="false">
+            Ввійти
+        </a>
+    }
+@* </ul> *@

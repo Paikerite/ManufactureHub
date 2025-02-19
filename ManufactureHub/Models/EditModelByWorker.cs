@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ESchedule.Models
+namespace ManufactureHub.Models
 {
     public class EditModelByWorker
     {

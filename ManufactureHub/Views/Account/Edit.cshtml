@@ -1,9 +1,7 @@
-﻿@model ESchedule.Models.EditModel
+﻿@model ManufactureHub.Models.EditModel
 
 @{
     ViewData["Title"] = "Редагування профіля";
-
-
 }
 
 <h1 style="color:#fff4e4">Редагування</h1>
@@ -17,7 +15,6 @@
                     <form asp-action="Edit" enctype="multipart/form-data">
                         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
                         <input type="hidden" asp-for="Id" />
-                        <input type="hidden" asp-for="ProfilePicture" />
                         <div class="mb-3">
                             <label asp-for="Name" class="control-label">Ім'я</label>
                             <input asp-for="Name" class="form-control" />
@@ -53,11 +50,6 @@
                             <label asp-for="Email" class="control-label">Електронна пошта</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Password" class="control-label">Підтвердіть пароль</label>
-                            <input type="password" asp-for="Password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <input type="submit" value="Зберегти" class="btn btn-primary" />

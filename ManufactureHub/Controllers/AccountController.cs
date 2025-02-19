@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ESchedule.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -314,8 +313,7 @@ namespace ManufactureHub.Controllers
             {
                 return NotFound("Юзер заданого id не знайдений");
             }
-
-            return View();
+            return View(userAccountViewModel);
         }
 
         // POST: User/Delete/5

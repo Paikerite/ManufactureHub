@@ -1,4 +1,4 @@
-﻿@model ESchedule.Models.LoginModel
+﻿@model ManufactureHub.Models.LoginModel
 @{
     ViewData["Title"] = "Ввійти";
 }
@@ -43,7 +43,7 @@
                         <button type="submit" class="btn btn-secondary w-100">Увійти</button>
                         <hr />
                         <div class="text-center">
-                            <span>Не має облікового запису? <a asp-area="" asp-controller="Account" asp-action="Create" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Зареєструйтесь!</a></span>
+@*                             <span>Не має облікового запису? <a asp-area="" asp-controller="Account" asp-action="Create" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Зареєструйтесь!</a></span> *@
                             <span>Забули пароль? <a asp-area="" asp-controller="Account" asp-action="ForgotPassword" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Скинути</a></span>
                         </div>
                     </form>

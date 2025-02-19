@@ -1,3 +1,4 @@
+using ESchedule.Services;
 using ManufactureHub.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,8 @@ builder.Services.AddAuthentication(opt =>
     opt.DefaultScheme = IdentityConstants.ApplicationScheme;
     opt.DefaultSignInScheme = IdentityConstants.ExternalScheme;
 }).AddIdentityCookies();
+
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
