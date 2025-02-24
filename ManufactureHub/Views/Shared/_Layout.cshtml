@@ -15,25 +15,34 @@
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse flex-column">
                 <div class="position-sticky pt-3 sidebar-sticky">
-                    <a asp-area="" asp-controller="Schedule" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                        <div class="hstack">
-                            <span class="fs-4">ESchedule</span>
-                        </div>
+                    <a asp-area="" asp-controller="Task" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none icon-link icon-link-hover">
+                        <svg class="bi" aria-hidden="true"><use xlink:href="#solar--home-2-bold" /></svg>
+                        <span class="fs-5">ManufactureHub</span>
                     </a>
                     <hr />
                     <ul class="nav nav-pills flex-column mb-auto">
                         <li class="nav-item">
-                            <a asp-area="" asp-controller="Schedule" asp-action="Index" class="nav-link">
-                                <div class="hstack">
-                                    <span>Розклад</span>
-                                </div>
+                            <a asp-area="" asp-controller="Task" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--home-2-bold" /></svg>
+                                <span>Таски</span>
                             </a>
                         </li>
                         <li>
-                            <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link">
-                                <div class="hstack">
-                                    <span>Класи</span>
-                                </div>
+                            <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--users-group-two-rounded-line-duotone" /></svg>
+                                <span>Користувачі</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--box-bold" /></svg>
+                                <span>Дільниці</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--buildings-outline"></use></svg>
+                                <span>Цехи</span>
                             </a>
                         </li>
                     </ul>
@@ -49,9 +58,45 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - ManufactureHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - ManufactureHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Конфеденційність</a>
         </div>
     </footer>
+
+    <svg style="display: none;">
+        <symbol id="solar--buildings-outline" viewBox="0 0 24 24">
+            <path fill="currentColor" fill-rule="evenodd" d="M14.948 1.25h2.104c.899 0 1.648 0 2.242.08c.628.084 1.195.27 1.65.725c.456.456.642 1.023.726 1.65c.08.595.08 1.345.08 2.243V21.25H22a.75.75 0 0 1 0 1.5H2a.75.75 0 0 1 0-1.5h.25V8.948c0-.898 0-1.648.08-2.242c.084-.628.27-1.195.725-1.65c.456-.456 1.023-.642 1.65-.726c.595-.08 1.345-.08 2.243-.08h3.33c.051-.874.213-1.63.777-2.195c.456-.455 1.023-.64 1.65-.725c.595-.08 1.345-.08 2.243-.08m-3.941 4.5H7c-.964 0-1.612.002-2.095.067c-.461.062-.659.169-.789.3s-.237.327-.3.788C3.753 7.388 3.75 8.036 3.75 9v12.25h4.5V19a.75.75 0 0 1 1.5 0v2.25h4.5V9c0-.964-.002-1.612-.066-2.095c-.063-.461-.17-.659-.3-.789s-.328-.237-.79-.3c-.481-.064-1.127-.066-2.087-.066m4.743 15.5V8.948c0-.898 0-1.648-.08-2.242c-.084-.628-.27-1.195-.726-1.65c-.455-.456-1.022-.642-1.65-.726c-.425-.057-.93-.074-1.51-.078c.05-.7.16-.963.332-1.136c.13-.13.328-.237.79-.3c.482-.064 1.13-.066 2.094-.066h2c.964 0 1.612.002 2.095.067c.461.062.659.169.789.3s.237.327.3.788c.064.483.066 1.131.066 2.095v15.25zM5.25 8A.75.75 0 0 1 6 7.25h6a.75.75 0 0 1 0 1.5H6A.75.75 0 0 1 5.25 8m0 3a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75" clip-rule="evenodd" />
+        </symbol>
+    </svg>
+
+    <svg style="display: none;">
+        <symbol id="solar--home-2-bold" viewBox="0 0 24 24">
+            <path fill="currentColor" fill-rule="evenodd" d="M2.52 7.823C2 8.77 2 9.915 2 12.203v1.522c0 3.9 0 5.851 1.172 7.063S6.229 22 10 22h4c3.771 0 5.657 0 6.828-1.212S22 17.626 22 13.725v-1.521c0-2.289 0-3.433-.52-4.381c-.518-.949-1.467-1.537-3.364-2.715l-2-1.241C14.111 2.622 13.108 2 12 2s-2.11.622-4.116 1.867l-2 1.241C3.987 6.286 3.038 6.874 2.519 7.823M11.25 18a.75.75 0 0 0 1.5 0v-3a.75.75 0 0 0-1.5 0z" clip-rule="evenodd" />
+        </symbol>
+    </svg>
+
+    <svg style="display: none;">
+        <symbol id="solar--checklist-minimalistic-bold" viewBox="0 0 24 24">
+            <path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.08 4.053a.75.75 0 1 0-1.087-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 8.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5zm-2.457 6.267a.75.75 0 1 0-1.086-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 15.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5z" clip-rule="evenodd" />
+        </symbol>
+    </svg>
+
+    <svg style="display: none;">
+        <symbol id="solar--users-group-two-rounded-line-duotone" viewBox="0 0 24 24">
+            <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="6" r="4" />
+                <path stroke-linecap="round" d="M18 9c1.657 0 3-1.12 3-2.5S19.657 4 18 4M6 9C4.343 9 3 7.88 3 6.5S4.343 4 6 4" opacity="0.5" />
+                <ellipse cx="12" cy="17" rx="6" ry="4" />
+                <path stroke-linecap="round" d="M20 19c1.754-.385 3-1.359 3-2.5s-1.246-2.115-3-2.5M4 19c-1.754-.385-3-1.359-3-2.5s1.246-2.115 3-2.5" opacity="0.5" />
+            </g>
+        </symbol>
+    </svg>
+
+    <svg style="display: none;">
+        <symbol id="solar--box-bold" viewBox="0 0 24 24">
+            <path fill="currentColor" d="m17.578 4.432l-2-1.05C13.822 2.461 12.944 2 12 2s-1.822.46-3.578 1.382l-.321.169l8.923 5.099l4.016-2.01c-.646-.732-1.688-1.279-3.462-2.21m4.17 3.534l-3.998 2V13a.75.75 0 0 1-1.5 0v-2.286l-3.5 1.75v9.44c.718-.179 1.535-.607 2.828-1.286l2-1.05c2.151-1.129 3.227-1.693 3.825-2.708c.597-1.014.597-2.277.597-4.8v-.117c0-1.893 0-3.076-.252-3.978M11.25 21.904v-9.44l-8.998-4.5C2 8.866 2 10.05 2 11.941v.117c0 2.525 0 3.788.597 4.802c.598 1.015 1.674 1.58 3.825 2.709l2 1.049c1.293.679 2.11 1.107 2.828 1.286M2.96 6.641l9.04 4.52l3.411-1.705l-8.886-5.078l-.103.054c-1.773.93-2.816 1.477-3.462 2.21" />
+        </symbol>
+    </svg>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using ManufactureHub.Data;
 using ManufactureHub.Models;
 using ManufactureHub.Data.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace ManufactureHub.Controllers
 {
@@ -34,13 +35,17 @@ namespace ManufactureHub.Controllers
             this.emailService = emailService;
         }
 
-        // GET: User
-        //public async Task<IActionResult> Index()
-        //{
-        //      return _context.Users != null ? 
-        //                  View(await _context.Users.ToListAsync()) :
-        //                  Problem("Entity set 'EScheduleDbContext.Users'  is null.");
-        //}
+        //GET: User
+        public async Task<IActionResult> Index()
+        {
+            return userManager.Users != null ?
+                        View(await userManager.Users.ToListAsync()) :
+                        Problem("Entity set 'userManager.Users'  is null.");
+
+            //return _context.Users != null ?
+            //            View(await _context.Users.ToListAsync()) :
+            //            Problem("Entity set 'EScheduleDbContext.Users'  is null.");
+        }
 
         // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -59,13 +64,101 @@ namespace ManufactureHub.Controllers
             return View(userAccountViewModel);
         }
 
-        // GET: User/Login
+        //GET: User/Login
         [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             return View();
         }
+
+        // GET: User/Login
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Login()
+        //{
+        //    ApplicationRole Role = new ApplicationRole()
+        //    {
+        //        RoleName = "Адмін",
+        //        Name = "Admin",
+        //        Description = "Відповідає за управління, контроль та підтримку роботи системи, організації, мережі або інфраструктури. Також, відповідає за функціонування веб-сайту, включаючи оновлення контенту, технічну підтримку та забезпечення безпеки",
+        //        RoleEnum = Roles.Admin,
+        //    };
+
+        //    var resRole = await roleManager.CreateAsync(Role);
+
+        //    Role = new ApplicationRole()
+        //    {
+        //        RoleName = "Директор виробництва",
+        //        Name = "HeadFacility",
+        //        Description = "Відповідає за організацію, управління та контроль виробничих процесів на підприємстві. Є ключовою в галузі виробництва, оскільки директор виробництва забезпечує ефективне функціонування всіх виробничих підрозділів, дотримання технологічних стандартів, своєчасне виконання замовлень та досягнення встановлених цілей.",
+        //        RoleEnum = Roles.HeadFacility,
+        //    };
+
+        //    resRole = await roleManager.CreateAsync(Role);
+
+        //    Role = new ApplicationRole()
+        //    {
+        //        RoleName = "Логістика",
+        //        Name = "LogisticTeam",
+        //        Description = "Займається організацією та оптимізацією потоків матеріалів, сировини, готової продукції та інших ресурсів, необхідних для ефективного функціонування виробництва. Основна мета логістика виробництва полягає в забезпеченні безперебійного постачання, мінімізації витрат та підвищенні ефективності виробничих процесів.",
+        //        RoleEnum = Roles.LogisticTeam,
+        //    };
+
+        //    resRole = await roleManager.CreateAsync(Role);
+
+        //    Role = new ApplicationRole()
+        //    {
+        //        RoleName = "Керівник цеху",
+        //        Name = "TeamLeadWorkstation",
+        //        Description = "Керує роботою цеху, відповідає за організацію виробничих процесів, виконання планових завдань, якість продукції та ефективне використання ресурсів. Є ключовою в структурі виробництва, оскільки керівник цеху безпосередньо впливає на результативність роботи підрозділу та досягнення загальних цілей підприємства.",
+        //        RoleEnum = Roles.TeamLeadWorkstation,
+        //    };
+
+        //    resRole = await roleManager.CreateAsync(Role);
+
+        //    Role = new ApplicationRole()
+        //    {
+        //        RoleName = "Керівник дільниці",
+        //        Name = "TeamLeadSection",
+        //        Description = "Відповідає за організацію та управління роботою конкретної дільниці (виробничої зони, цеху або відділу) у межах підприємства. Забезпечує виконання виробничих завдань, дотримання технологічних процесів, контроль якості продукції та ефективне використання ресурсів на своїй дільниці.",
+        //        RoleEnum = Roles.TeamLeadSection,
+        //    };
+
+        //    resRole = await roleManager.CreateAsync(Role);
+
+        //    Role = new ApplicationRole()
+        //    {
+        //        RoleName = "Робітник",
+        //        Name = "Worker",
+        //        Description = "Забезпечує процес обробки деталей на верстатах з програмним керуванням.",
+        //        RoleEnum = Roles.Worker,
+        //    };
+
+        //    resRole = await roleManager.CreateAsync(Role);
+
+        //    ApplicationUser user = new ApplicationUser()
+        //    {
+        //        Name = "Арсеній",
+        //        SurName = "Норков",
+        //        PatronymicName = "Сергійович",
+        //        ProfilePicture = "user.svg",
+        //        Email = "norkov900@gmail.com",
+        //        UserName = "norkov900@gmail.com",
+        //        Position = "Системний адміністратор",
+        //        EmploymentDate = DateTime.Today,
+        //        LastLoginDate = DateTime.Now,
+        //        LastLoginIP = "0.0.0.0"
+        //    };
+
+        //    var result = await userManager.CreateAsync(user, "Arsen2003");
+        //    //await userManager.SetUserNameAsync(user, userAccountViewModel.Email);
+        //    //await userManager.SetEmailAsync(user, userAccountViewModel.Email);
+        //    var identityResultRole = await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+        //    await signInManager.SignInAsync(user, isPersistent: false);
+
+        //    await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        //    return View();
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -166,12 +259,15 @@ namespace ManufactureHub.Controllers
                     ProfilePicture = pathToImage,
                     Email = userAccountViewModel.Email!,
                     UserName = userAccountViewModel.Email!,
-                    //Role = userAccountViewModel.Role,
+                    Position = "Системний адміністратор",
+                    EmploymentDate = DateTime.Today,
+                    LastLoginDate = DateTime.Now,
+                    LastLoginIP = "0.0.0.0"
                 };
 
                 var result = await userManager.CreateAsync(user, userAccountViewModel.Password!);
-                await userManager.SetUserNameAsync(user, userAccountViewModel.Email);
-                await userManager.SetEmailAsync(user, userAccountViewModel.Email);
+                //await userManager.SetUserNameAsync(user, userAccountViewModel.Email);
+                //await userManager.SetEmailAsync(user, userAccountViewModel.Email);
 
                 if (result.Succeeded)
                 {

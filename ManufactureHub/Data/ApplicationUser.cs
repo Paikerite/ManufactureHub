@@ -28,7 +28,7 @@ namespace ManufactureHub.Data
         public DateTime EmploymentDate { get; set; } // Дата прийому на роботу
 
         // Права доступу та ролі
-        public bool IsActive { get; set; } = true; // Статус користувача (активний чи ні)
+        public bool IsActive { get; set; } // Статус користувача (активний чи ні)
 
         // Логування дій (якщо потрібно)
         public DateTime LastLoginDate { get; set; } // Останній вхід в систему
