@@ -1,5 +1,6 @@
 ﻿using ManufactureHub.Data.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManufactureHub.Models
 {
@@ -15,18 +16,24 @@ namespace ManufactureHub.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Необхідний опис завдання")]
         public string Description { get; set; }
 
-        [DataType(DataType.Time)]
+        [DataType(DataType.DateTime)]
         [Required(ErrorMessage = "Необхідно назначити дедлайн")]
         public DateTime Deadline { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime Created { get; set; }
 
         [Required(ErrorMessage = "Необхідно назначити пріоритет")]
         public Priority Priority { get; set; }
 
+        public StatusTask StatusTask { get; set; }
+
+        public string? ProfilePictureUploader { get; set; }
+
         public string? FileUrl { get; set; }
 
-        public List<SectionViewModel> Sections { get; set; } = new();
+        public int SectionId { get; set; }
+        [ForeignKey("SectionId")]
+        public SectionViewModel? Section { get; set; }
     }
 }

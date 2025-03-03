@@ -1,65 +1,241 @@
-﻿@model IEnumerable<ManufactureHub.Models.TaskViewModel>
+﻿@using ManufactureHub.Data.Enums
+@model IEnumerable<ManufactureHub.Models.TaskViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Завдання";
+    var InProgressAssault = Model.Where(t => t.StatusTask == StatusTask.inprogress);
+    var UnderReviewTasks = Model.Where(t => t.StatusTask == StatusTask.underreview);
+    var DoneTasks = Model.Where(t => t.StatusTask == StatusTask.done);
+    var RejectedTasks = Model.Where(t => t.StatusTask == StatusTask.rejected);
 }
 
-<h1>Index</h1>
+<div class="container-fluid board-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Board</h2>
+        <a asp-action="Create" class="btn btn-primary">Create</a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deadline)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileUrl)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deadline)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileUrl)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <div class="d-flex flex-nowrap overflow-auto" id="taskBoard">
+        <!-- IN PROGRESS Column -->
+        <div class="board-column flex-shrink-0 w-25 status-in-progress drop-target" data-status="in-progress">
+            <h5>IN PROGRESS <span class="badge bg-secondary">1</span></h5>
+            @foreach (var task in InProgressAssault)
+            {
+                <div class="task-card" data-task-id="@task.Id" data-status="in-progress">
+                    <p>@task.Name</p>
+                    <span class="text-muted">@task.Created</span>
+                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
+                    <span>@task.Section.Name</span>
+                </div>
+            }
+            <div class="task-card" data-task-id="task1" data-status="in-progress">
+                <p>Feature deployment runbook</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>CM-3</span>
+            </div>
+        </div>
+
+        <!-- UNDER REVIEW Column -->
+        <div class="board-column flex-shrink-0 w-25 status-under-review drop-target" data-status="under-review">
+            <h5>UNDER REVIEW <span class="badge bg-secondary">3</span></h5>
+            @foreach (var task in UnderReviewTasks)
+            {
+                <div class="task-card" data-task-id="@task.Id" data-status="under-review">
+                    <p>@task.Name</p>
+                    <span class="text-muted">@task.Created</span>
+                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
+                    <span>@task.Section.Name</span>
+                </div>
+            }
+            <div class="task-card" data-task-id="task2" data-status="under-review">
+                <p>Customer onboarding</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-6</span>
+            </div>
+            <div class="task-card" data-task-id="task3" data-status="under-review">
+                <p>Employee onboarding</p>
+                <span class="text-muted">Mar 12</span>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-18</span>
+            </div>
+            <div class="task-card" data-task-id="task4" data-status="under-review">
+                <p>Employee payroll</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-7</span>
+            </div>
+        </div>
+
+        <!-- DONE Column -->
+        <div class="board-column flex-shrink-0 w-25 status-done drop-target" data-status="done">
+            <h5>DONE <span class="badge bg-secondary">3</span></h5>
+            @foreach (var task in DoneTasks)
+            {
+                <div class="task-card" data-task-id="@task.Id" data-status="done">
+                    <p>@task.Name</p>
+                    <span class="text-muted">@task.Created</span>
+                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
+                    <span>@task.Section.Name</span>
+                </div>
+            }
+            <div class="task-card" data-task-id="task5" data-status="done">
+                <p>IT security check process</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-1</span>
+            </div>
+            <div class="task-card" data-task-id="task6" data-status="done">
+                <p>Candidate recruitment</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-6</span>
+            </div>
+            <div class="task-card" data-task-id="task7" data-status="done">
+                <p>Digital partnerships</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-17</span>
+            </div>
+        </div>
+
+        <!-- REJECTED Column -->
+        <div class="board-column flex-shrink-0 w-25 status-rejected drop-target" data-status="rejected">
+            <h5>REJECTED <span class="badge bg-secondary">2</span></h5>
+            @foreach (var task in RejectedTasks)
+            {
+                <div class="task-card" data-task-id="@task.Id" data-status="rejected">
+                    <p>@task.Name</p>
+                    <span class="text-muted">@task.Created</span>
+                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
+                    <span>@task.Section.Name</span>
+                </div>
+            }
+            <div class="task-card" data-task-id="task8" data-status="rejected">
+                <p>PR launch runbook</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-1</span>
+            </div>
+            <div class="task-card" data-task-id="task9" data-status="rejected">
+                <p>Website deployments</p>
+                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
+                <span>PC-6</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize Interact.js for drag-and-drop
+        interact('.task-card')
+            .draggable({
+                inertia: true, // Add inertia for smoother dragging
+                modifiers: [
+                    interact.modifiers.restrictRect({
+                        restriction: '#taskBoard', // Restrict movement within the task board
+                        endOnly: true
+                    })
+                ],
+                autoScroll: true, // Enable auto-scrolling when dragging near the edge
+                onmove: dragMoveListener,
+                onend: dragEndListener
+            });
+
+        interact('.drop-target')
+            .dropzone({
+                accept: '.task-card',
+                overlap: 0.1, // Lower overlap requirement for easier dropping
+                ondrop: dropHandler,
+                ondragenter: function(event) {
+                    event.target.classList.add('drop-hover'); // Visual feedback for drop zone
+                },
+                ondragleave: function(event) {
+                    event.target.classList.remove('drop-hover'); // Remove hover effect when leaving
+                }
+            });
+
+        function dragMoveListener(event) {
+            const target = event.target;
+            const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+            const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+            // Update the element's position
+            target.style.position = 'absolute';
+            target.style.transform = `translate(${x}px, ${y}px)`;
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+
+            // Add dragging class for visual feedback
+            target.classList.add('dragging');
+        }
+
+        function dragEndListener(event) {
+            const target = event.target;
+            target.classList.remove('dragging');
+            target.style.position = ''; // Reset position
+            target.style.transform = ''; // Reset transform
+            target.removeAttribute('data-x');
+            target.removeAttribute('data-y');
+        }
+
+        function dropHandler(event) {
+            const draggedElement = event.relatedTarget; // The task being dragged
+            const dropZone = event.target.closest('.drop-target'); // Ensure we get the column, not a child element
+
+            if (!dropZone) return; // Safety check
+
+            // Move the task to the drop zone
+            dropZone.appendChild(draggedElement);
+
+            // Reset the position and transform to ensure the task stays in the new position
+            draggedElement.style.position = '';
+            draggedElement.style.transform = '';
+
+            // Update the task's status visually and on the server
+            const taskId = draggedElement.dataset.taskId;
+            const newStatus = dropZone.dataset.status;
+
+            // Update the task card's status class for visual feedback
+            updateTaskVisualStatus(draggedElement, newStatus);
+
+            // Remove drop-hover from the drop zone after dropping
+            dropZone.classList.remove('drop-hover');
+
+            //console.log(`Task ${taskId} moved to ${newStatus}`); // Debug log
+            updateTaskStatus(taskId, newStatus);
+        }
+
+        // Function to update the visual status of the task card
+        function updateTaskVisualStatus(taskElement, status) {
+            // Remove all status classes
+            taskElement.classList.remove('status-in-progress', 'status-under-review', 'status-done', 'status-rejected');
+
+            // Add the new status class
+            switch (status) {
+                case 'in-progress':
+                    taskElement.classList.add('status-in-progress');
+                    break;
+                case 'under-review':
+                    taskElement.classList.add('status-under-review');
+                    break;
+                case 'done':
+                    taskElement.classList.add('status-done');
+                    break;
+                case 'rejected':
+                    taskElement.classList.add('status-rejected');
+                    break;
+            }
+        }
+
+        // Simulate updating task status on the server (replace with actual API call)
+        function updateTaskStatus(taskId, newStatus) {
+            console.log(`Task ${taskId} moved to ${newStatus}`);
+            /*
+            fetch('/api/tasks/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ taskId: taskId, status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+            */
+        }
+    </script>
 }
-    </tbody>
-</table>

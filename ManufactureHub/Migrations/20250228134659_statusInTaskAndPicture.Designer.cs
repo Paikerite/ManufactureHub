@@ -4,6 +4,7 @@ using ManufactureHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManufactureHub.Migrations
 {
     [DbContext(typeof(ManufactureHubContext))]
-    partial class ManufactureHubContextModelSnapshot : ModelSnapshot
+    [Migration("20250228134659_statusInTaskAndPicture")]
+    partial class statusInTaskAndPicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ApplicationUserSectionViewModel", (string)null);
+                    b.ToTable("ApplicationUserSectionViewModel");
                 });
 
             modelBuilder.Entity("ManufactureHub.Data.ApplicationRole", b =>
@@ -211,7 +214,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("WorkstationViewModelId");
 
-                    b.ToTable("Sections", (string)null);
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.TaskViewModel", b =>
@@ -246,17 +249,12 @@ namespace ManufactureHub.Migrations
                     b.Property<string>("ProfilePictureUploader")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SectionId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StatusTask")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SectionId");
-
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.WorkstationViewModel", b =>
@@ -281,7 +279,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workstations", (string)null);
+                    b.ToTable("Workstations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -387,6 +385,21 @@ namespace ManufactureHub.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SectionViewModelTaskViewModel", b =>
+                {
+                    b.Property<int>("SectionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TasksId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SectionsId", "TasksId");
+
+                    b.HasIndex("TasksId");
+
+                    b.ToTable("SectionViewModelTaskViewModel");
+                });
+
             modelBuilder.Entity("ApplicationUserSectionViewModel", b =>
                 {
                     b.HasOne("ManufactureHub.Models.SectionViewModel", null)
@@ -407,17 +420,6 @@ namespace ManufactureHub.Migrations
                     b.HasOne("ManufactureHub.Models.WorkstationViewModel", null)
                         .WithMany("Sections")
                         .HasForeignKey("WorkstationViewModelId");
-                });
-
-            modelBuilder.Entity("ManufactureHub.Models.TaskViewModel", b =>
-                {
-                    b.HasOne("ManufactureHub.Models.SectionViewModel", "Section")
-                        .WithMany("Tasks")
-                        .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -471,9 +473,19 @@ namespace ManufactureHub.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ManufactureHub.Models.SectionViewModel", b =>
+            modelBuilder.Entity("SectionViewModelTaskViewModel", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.HasOne("ManufactureHub.Models.SectionViewModel", null)
+                        .WithMany()
+                        .HasForeignKey("SectionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ManufactureHub.Models.TaskViewModel", null)
+                        .WithMany()
+                        .HasForeignKey("TasksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.WorkstationViewModel", b =>

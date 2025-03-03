@@ -1,58 +1,85 @@
 ﻿@model ManufactureHub.Models.TaskViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Створити завдання";
 }
 
-<h1>Create</h1>
-
-<h4>TaskViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card shadow-sm col-md-5 col-lg-6">
+            <div class="card-body">
+                <div class="row">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Назва завдання</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Мета завдання</label>
+                            <textarea type="text" asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <h4 class="mb-3">Пріорітет</h4>
+                                <div class="my-3">
+                                    <div class="form-check">
+                                        <input asp-for="Priority" id="low" name="Priority" type="radio" value="Low" class="form-check-input" />
+                                        <label class="form-check-label" for="low">Низький</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input asp-for="Priority" id="medium" name="Priority" type="radio" value="Medium" checked class="form-check-input" />
+                                        <label class="form-check-label" for="medium">Средній</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input asp-for="Priority" id="high" name="Priority" type="radio" value="High" class="form-check-input" />
+                                        <label class="form-check-label" for="high">Високий</label>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Priority" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="Deadline" class="form-label">Кінцевий срок сдачи</label>
+                                <input asp-for="Deadline" class="form-control" />
+                                <span asp-validation-for="Deadline" class="text-danger"></span>
+                            </div>
+                        </div>
+                        @*                             <div class="mb-3">
+                                @if (selectList.Count() != 0)
+                                {
+                                    <label asp-for="SelectedId" class="form-label">Курси до яких відноситься данний урок</label>
+                                    <div class="row">
+                                        <select name="SelectedId" id="SelectedId" asp-for="SelectedId" asp-items="selectList" class="form-select"></select>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span>Ви не керуєте жодним курсом <a asp-area="" asp-controller="Class" asp-action="Create" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Створити свій курс</a></span>
+                                }
+                                <span asp-validation-for="SelectedId" class="text-danger"></span>
+                            </div> *@
+                        <div class="row g-2 mb-3">
+                            <div class="col-auto">
+                                <input type="submit" value="Опублікувати" class="btn btn-primary" />
+                            </div>
+                            <div class="col-auto">
+                                <a class="link-underline-light align-middle icon-link icon-link-hover" asp-action="Index">
+                                    <svg class="bi" aria-hidden="true"><use xlink:href="#solar--arrow-left-line-duotone" /></svg>
+                                    Повернутися до списку завдань
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control" />
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <select asp-for="Priority" class="form-control"></select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FileUrl" class="control-label"></label>
-                <input asp-for="FileUrl" class="form-control" />
-                <span asp-validation-for="FileUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

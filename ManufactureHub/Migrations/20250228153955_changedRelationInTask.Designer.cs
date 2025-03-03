@@ -4,6 +4,7 @@ using ManufactureHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManufactureHub.Migrations
 {
     [DbContext(typeof(ManufactureHubContext))]
-    partial class ManufactureHubContextModelSnapshot : ModelSnapshot
+    [Migration("20250228153955_changedRelationInTask")]
+    partial class changedRelationInTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ApplicationUserSectionViewModel", (string)null);
+                    b.ToTable("ApplicationUserSectionViewModel");
                 });
 
             modelBuilder.Entity("ManufactureHub.Data.ApplicationRole", b =>
@@ -211,7 +214,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("WorkstationViewModelId");
 
-                    b.ToTable("Sections", (string)null);
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.TaskViewModel", b =>
@@ -256,7 +259,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("SectionId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.WorkstationViewModel", b =>
@@ -281,7 +284,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workstations", (string)null);
+                    b.ToTable("Workstations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

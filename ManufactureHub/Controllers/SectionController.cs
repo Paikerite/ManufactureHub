@@ -1,27 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ManufactureHub.Data;
 using ManufactureHub.Models;
-using ManufactureHub.Data.Enums;
 
 namespace ManufactureHub.Controllers
 {
-    public class TaskController : Controller
+    public class SectionController : Controller
     {
         private readonly ManufactureHubContext _context;
 
-        public TaskController(ManufactureHubContext context)
+        public SectionController(ManufactureHubContext context)
         {
             _context = context;
         }
 
-        // GET: TaskViewModels
+        // GET: Section
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tasks.ToListAsync());
+            return View(await _context.Sections.ToListAsync());
         }
 
-        // GET: TaskViewModels/Details/5
+        // GET: Section/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -29,42 +33,39 @@ namespace ManufactureHub.Controllers
                 return NotFound();
             }
 
-            var taskViewModel = await _context.Tasks
+            var sectionViewModel = await _context.Sections
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (taskViewModel == null)
+            if (sectionViewModel == null)
             {
                 return NotFound();
             }
 
-            return View(taskViewModel);
+            return View(sectionViewModel);
         }
 
-        // GET: TaskViewModels/Create
+        // GET: Section/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TaskViewModels/Create
+        // POST: Section/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Deadline,Priority,FileUrl")] TaskViewModel taskViewModel)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,PrimaryColor,IdTeamLead")] SectionViewModel sectionViewModel)
         {
             if (ModelState.IsValid)
             {
-                taskViewModel.Created = DateTime.Now;
-                taskViewModel.StatusTask = StatusTask.underreview;
-                taskViewModel.ProfilePictureUploader = "user.svg";
-                _context.Add(taskViewModel);
+                _context.Add(sectionViewModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(taskViewModel);
+            return View(sectionViewModel);
         }
 
-        // GET: TaskViewModels/Edit/5
+        // GET: Section/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +73,22 @@ namespace ManufactureHub.Controllers
                 return NotFound();
             }
 
-            var taskViewModel = await _context.Tasks.FindAsync(id);
-            if (taskViewModel == null)
+            var sectionViewModel = await _context.Sections.FindAsync(id);
+            if (sectionViewModel == null)
             {
                 return NotFound();
             }
-            return View(taskViewModel);
+            return View(sectionViewModel);
         }
 
-        // POST: TaskViewModels/Edit/5
+        // POST: Section/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Deadline,Created,Priority,FileUrl,StatusTask")] TaskViewModel taskViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PrimaryColor,IdTeamLead")] SectionViewModel sectionViewModel)
         {
-            if (id != taskViewModel.Id)
+            if (id != sectionViewModel.Id)
             {
                 return NotFound();
             }
@@ -96,12 +97,12 @@ namespace ManufactureHub.Controllers
             {
                 try
                 {
-                    _context.Update(taskViewModel);
+                    _context.Update(sectionViewModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TaskViewModelExists(taskViewModel.Id))
+                    if (!SectionViewModelExists(sectionViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +113,10 @@ namespace ManufactureHub.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(taskViewModel);
+            return View(sectionViewModel);
         }
 
-        // GET: TaskViewModels/Delete/5
+        // GET: Section/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,34 +124,34 @@ namespace ManufactureHub.Controllers
                 return NotFound();
             }
 
-            var taskViewModel = await _context.Tasks
+            var sectionViewModel = await _context.Sections
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (taskViewModel == null)
+            if (sectionViewModel == null)
             {
                 return NotFound();
             }
 
-            return View(taskViewModel);
+            return View(sectionViewModel);
         }
 
-        // POST: TaskViewModels/Delete/5
+        // POST: Section/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var taskViewModel = await _context.Tasks.FindAsync(id);
-            if (taskViewModel != null)
+            var sectionViewModel = await _context.Sections.FindAsync(id);
+            if (sectionViewModel != null)
             {
-                _context.Tasks.Remove(taskViewModel);
+                _context.Sections.Remove(sectionViewModel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TaskViewModelExists(int id)
+        private bool SectionViewModelExists(int id)
         {
-            return _context.Tasks.Any(e => e.Id == id);
+            return _context.Sections.Any(e => e.Id == id);
         }
     }
 }
