@@ -3,10 +3,6 @@
 
 @{
     ViewData["Title"] = "Завдання";
-    var InProgressAssault = Model.Where(t => t.StatusTask == StatusTask.inprogress);
-    var UnderReviewTasks = Model.Where(t => t.StatusTask == StatusTask.underreview);
-    var DoneTasks = Model.Where(t => t.StatusTask == StatusTask.done);
-    var RejectedTasks = Model.Where(t => t.StatusTask == StatusTask.rejected);
 }
 
 <div class="container-fluid board-container">
@@ -19,7 +15,7 @@
         <!-- IN PROGRESS Column -->
         <div class="board-column flex-shrink-0 w-25 status-in-progress drop-target" data-status="in-progress">
             <h5>IN PROGRESS <span class="badge bg-secondary">1</span></h5>
-            @foreach (var task in InProgressAssault)
+            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.inprogress))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="in-progress">
                     <p>@task.Name</p>
@@ -38,7 +34,7 @@
         <!-- UNDER REVIEW Column -->
         <div class="board-column flex-shrink-0 w-25 status-under-review drop-target" data-status="under-review">
             <h5>UNDER REVIEW <span class="badge bg-secondary">3</span></h5>
-            @foreach (var task in UnderReviewTasks)
+            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.underreview))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="under-review">
                     <p>@task.Name</p>
@@ -68,7 +64,7 @@
         <!-- DONE Column -->
         <div class="board-column flex-shrink-0 w-25 status-done drop-target" data-status="done">
             <h5>DONE <span class="badge bg-secondary">3</span></h5>
-            @foreach (var task in DoneTasks)
+            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.done))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="done">
                     <p>@task.Name</p>
@@ -97,7 +93,7 @@
         <!-- REJECTED Column -->
         <div class="board-column flex-shrink-0 w-25 status-rejected drop-target" data-status="rejected">
             <h5>REJECTED <span class="badge bg-secondary">2</span></h5>
-            @foreach (var task in RejectedTasks)
+            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.rejected))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="rejected">
                     <p>@task.Name</p>
@@ -207,20 +203,20 @@
             taskElement.classList.remove('status-in-progress', 'status-under-review', 'status-done', 'status-rejected');
 
             // Add the new status class
-            switch (status) {
-                case 'in-progress':
-                    taskElement.classList.add('status-in-progress');
-                    break;
-                case 'under-review':
-                    taskElement.classList.add('status-under-review');
-                    break;
-                case 'done':
-                    taskElement.classList.add('status-done');
-                    break;
-                case 'rejected':
-                    taskElement.classList.add('status-rejected');
-                    break;
-            }
+            // switch (status) {
+            //     case 'in-progress':
+            //         taskElement.classList.add('status-in-progress');
+            //         break;
+            //     case 'under-review':
+            //         taskElement.classList.add('status-under-review');
+            //         break;
+            //     case 'done':
+            //         taskElement.classList.add('status-done');
+            //         break;
+            //     case 'rejected':
+            //         taskElement.classList.add('status-rejected');
+            //         break;
+            //}
         }
 
         // Simulate updating task status on the server (replace with actual API call)
