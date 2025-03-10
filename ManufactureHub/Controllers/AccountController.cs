@@ -190,6 +190,11 @@ namespace ManufactureHub.Controllers
                     }
                 }
 
+                if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError("", "Можливість входу до аккаунту заборонений");
+                    return View(model);
+                }
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToAction("LoginWith2fa", new { ReturnUrl = returnUrl, model.RememberMe });
@@ -262,7 +267,8 @@ namespace ManufactureHub.Controllers
                     Position = "Системний адміністратор",
                     EmploymentDate = DateTime.Today,
                     LastLoginDate = DateTime.Now,
-                    LastLoginIP = "0.0.0.0"
+                    LastLoginIP = "0.0.0.0",
+                    EmailConfirmed  = true,
                 };
 
                 var result = await userManager.CreateAsync(user, userAccountViewModel.Password!);
@@ -444,7 +450,6 @@ namespace ManufactureHub.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await signInManager.SignOutAsync();
             return RedirectToAction(nameof(TaskController.Index), "Task");
         }
@@ -573,34 +578,9 @@ namespace ManufactureHub.Controllers
             return View();
         }
 
-        //[AllowAnonymous]
-        //public async Task<IActionResult> TestCreat()
-        //{
-        //    IdentityResult result = await roleManager.CreateAsync(new ApplicationRole { RoleName = "Студент", Name= "Student", Description= "Студент, людина яка навчається і знає кому давати хабар" });
-        //    if (result.Succeeded)
-        //    {
-        //        IdentityResult result1 = await roleManager.CreateAsync(new ApplicationRole { RoleName = "Вчитель", Name = "Teacher", Description = "Вчитель, людина яка навчає і знає з кого брати хабар" });
-        //        if (result.Succeeded)
-        //        {
-        //            return RedirectToAction("Index");
-        //        }
-        //        else
-        //        {
-        //            foreach (var error in result.Errors)
-        //            {
-        //                logger.LogWarning(error.Description);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (var error in result.Errors)
-        //        {
-        //            logger.LogWarning(error.Description);
-        //        }
-        //    }
-
-        //    return View();
-        //}
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

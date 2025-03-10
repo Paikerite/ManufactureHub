@@ -2,49 +2,50 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 a {
-  color: #0077cc;
+    color: #0077cc;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
 }
 
 /* Custom styles for sidebar animation and icon-only mode */
@@ -55,17 +56,17 @@ button.accept-policy {
     top: 0;
     bottom: 0;
     z-index: 1000;
-    color: #ecf0f1;
+    /*color: #ecf0f1;*/
 }
 
-    #sidebarMenu.collapsed {
-        width: 60px; /* Narrow width for icon-only mode */
-    }
+#sidebarMenu.collapsed {
+    width: 60px; /* Narrow width for icon-only mode */
+}
 
 .sidebar-sticky {
     height: 100vh;
     overflow-y: auto;
-    padding-top: 10px;
+    padding-top: 10px 15px; /* Adjusted padding to avoid extra space */
 }
 
 .nav-link {
@@ -77,19 +78,19 @@ button.accept-policy {
     transition: background-color 0.3s, padding 0.3s;
 }
 
-    .nav-link:hover {
-        background-color: #34495e;
-    }
+.nav-link:hover {
+    background-color: #34495e;
+}
 
-    .nav-link svg {
-        margin-right: 10px;
-        width: 20px;
-        height: 20px;
-    }
+.nav-link svg {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+}
 
-    .nav-link span {
-        transition: opacity 0.3s ease-in-out;
-    }
+.nav-link span {
+    transition: opacity 0.3s ease-in-out;
+}
 
 #sidebarMenu.collapsed .nav-link span {
     opacity: 0;
@@ -129,6 +130,8 @@ button.accept-policy {
 main {
     transition: margin-left 0.3s ease-in-out;
     margin-left: 16.6667%; /* Default margin for col-md-3 */
+    /* Remove padding to avoid extra space, use margin instead if needed */
+    padding: 0 0 0 0; /* Override px-md-4 but keep vertical padding */
 }
 
 #sidebarMenu.collapsed + main {
@@ -138,6 +141,9 @@ main {
 /* Style for the brand link */
 .icon-link-hover {
     color: #ecf0f1 !important;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
 }
 
     .icon-link-hover:hover {

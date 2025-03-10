@@ -16,31 +16,31 @@
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse flex-column">
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <a asp-area="" asp-controller="Task" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none icon-link icon-link-hover">
-                        <svg class="bi" aria-hidden="true"><use xlink:href="#solar--home-2-bold" /></svg>
+                        <svg class="bi" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><use xlink:href="#solar--home-2-bold" /></svg>
                         <span class="fs-5">ManufactureHub</span>
                     </a>
                     <hr />
                     <ul class="nav nav-pills flex-column mb-auto">
                         <li class="nav-item">
-                            <a asp-area="" asp-controller="Task" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                            <a asp-area="" asp-controller="Task" asp-action="Index" class="nav-link icon-link">
                                 <svg class="bi" aria-hidden="true"><use xlink:href="#solar--checklist-minimalistic-bold" /></svg>
                                 <span>Таски</span>
                             </a>
                         </li>
-                        <li>
-                            <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link icon-link">
                                 <svg class="bi" aria-hidden="true"><use xlink:href="#solar--users-group-two-rounded-line-duotone" /></svg>
                                 <span>Користувачі</span>
                             </a>
                         </li>
-                        <li>
-                            <a asp-area="" asp-controller="Section" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Section" asp-action="Index" class="nav-link icon-link">
                                 <svg class="bi" aria-hidden="true"><use xlink:href="#solar--box-bold" /></svg>
                                 <span>Дільниці</span>
                             </a>
                         </li>
-                        <li>
-                            <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link icon-link icon-link-hover">
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link icon-link">
                                 <svg class="bi" aria-hidden="true"><use xlink:href="#solar--buildings-outline"></use></svg>
                                 <span>Цехи</span>
                             </a>
@@ -52,7 +52,7 @@
                     <label class="btn btn-primary" for="toggleSidebar">☰</label>
                 </div>
             </nav>
-            <main role="main" class="pb-3 pt-3 col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main role="main" class="pb-3 pt-3 col-md-9 ms-sm-auto col-lg-10 ">
                 @RenderBody()
             </main>
         </div>
@@ -64,7 +64,7 @@
         </div>
     </footer>
 
-    <!-- SVG Icons (unchanged) -->
+    <!-- SVG Icons -->
 
     <svg style="display: none;">
         <symbol id="solar--checklist-minimalistic-bold" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.08 4.053a.75.75 0 1 0-1.087-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 8.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5zm-2.457 6.267a.75.75 0 1 0-1.086-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 15.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5z" clip-rule="evenodd" /></symbol>
@@ -131,16 +131,25 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         // Sidebar toggle functionality
-        document.getElementById('toggleSidebar').addEventListener('click', function () {
+        document.getElementById('toggleSidebar').addEventListener('change', function () {
             const sidebar = document.getElementById('sidebarMenu');
-            sidebar.classList.toggle('collapsed');
+            const isCollapsed = this.checked; // Checkbox state
+            sidebar.classList.toggle('collapsed', !isCollapsed); // Inverse logic: checked = expanded
+            // Save the state to localStorage (true = expanded, false = collapsed)
+            localStorage.setItem('sidebarCollapsed', !isCollapsed);
         });
 
-        // Ensure the sidebar is visible on page load (remove collapsed class if present)
+        // Restore sidebar state on page load
         document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.getElementById('sidebarMenu');
-            if (sidebar.classList.contains('collapsed')) {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const toggleCheckbox = document.getElementById('toggleSidebar');
+            if (isCollapsed) {
                 sidebar.classList.remove('collapsed');
+                toggleCheckbox.checked = true; // Ensure checkbox reflects expanded state
+            } else {
+                sidebar.classList.add('collapsed');
+                toggleCheckbox.checked = false; // Ensure checkbox reflects collapsed state
             }
         });
     </script>
