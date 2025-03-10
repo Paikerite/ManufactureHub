@@ -48,6 +48,8 @@
                     </ul>
                     <hr />
                     <partial name="_LoginPartial" />
+                    <input type="checkbox" class="btn-check" id="toggleSidebar" checked autocomplete="off">
+                    <label class="btn btn-primary" for="toggleSidebar">☰</label>
                 </div>
             </nav>
             <main role="main" class="pb-3 pt-3 col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -61,6 +63,8 @@
             &copy; 2025 - ManufactureHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Конфеденційність</a>
         </div>
     </footer>
+
+    <!-- SVG Icons (unchanged) -->
 
     <svg style="display: none;">
         <symbol id="solar--checklist-minimalistic-bold" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.08 4.053a.75.75 0 1 0-1.087-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 8.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5zm-2.457 6.267a.75.75 0 1 0-1.086-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 15.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5z" clip-rule="evenodd" /></symbol>
@@ -102,13 +106,44 @@
     </svg>
 
     <svg style="display: none;">
-        <symbol id="solar--arrow-left-line-duotone" viewBox="0 0 24 24"><g fill="none"><path fill="currentColor" d="M20 12.75a.75.75 0 0 0 0-1.5zm0-1.5H4v1.5h16z" opacity="0.5" /><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m10 6l-6 6l6 6" /></g></symbol>
+        <symbol id="solar--alt-arrow-left-line-duotone" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 5l-6 7l6 7" />
+        </symbol>
+    </svg>
+    
+    <svg style="display: none;">
+        <symbol id="solar--user-bold" viewBox="0 0 24 24">
+            <circle cx="12" cy="6" r="4" fill="currentColor" />
+            <path fill="currentColor" d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5" />
+        </symbol>
+    </svg>
+
+    <svg style="display: none;">
+        <symbol id="solar--login-2-bold" viewBox="0 0 24 24">
+            <path fill="currentColor" fill-rule="evenodd" d="M1.625 12c0 .414.336.75.75.75h10.973l-1.961 1.68a.75.75 0 1 0 .976 1.14l3.5-3a.75.75 0 0 0 0-1.14l-3.5-3a.75.75 0 1 0-.976 1.14l1.96 1.68H2.376a.75.75 0 0 0-.75.75" clip-rule="evenodd" />
+            <path fill="currentColor" d="M9.375 9.75h.378a2.25 2.25 0 0 1 3.586-2.458l3.5 3a2.25 2.25 0 0 1 0 3.416l-3.5 3a2.25 2.25 0 0 1-3.586-2.458h-.378V16c0 2.828 0 4.243.879 5.121c.878.879 2.293.879 5.121.879h1c2.828 0 4.243 0 5.121-.879c.879-.878.879-2.293.879-5.121V8c0-2.828 0-4.243-.879-5.121C20.618 2 19.203 2 16.375 2h-1c-2.828 0-4.243 0-5.121.879c-.879.878-.879 2.293-.879 5.121z" />
+        </symbol>
     </svg>
 
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Sidebar toggle functionality
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebarMenu');
+            sidebar.classList.toggle('collapsed');
+        });
+
+        // Ensure the sidebar is visible on page load (remove collapsed class if present)
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebarMenu');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
