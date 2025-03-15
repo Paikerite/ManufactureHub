@@ -10,17 +10,16 @@
     }
 }
 
-@* <ul class="navbar-nav"> *@
     @if (signInManager.IsSignedIn(User))
     {
-        <div class="btn-group dropdown-center">
-            <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id">
+        <div class="dropdown">
+            <a class="d-flex align-items-center text-decoration-none dropdown-toggle" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id" data-bs-toggle="dropdown">
                 <img src="~/@CurrentUser.ProfilePicture" alt="" width="32" height="32" class="rounded-circle me-2">
-                @CurrentUser.SurName[0]. @CurrentUser.Name[0]. @CurrentUser.PatronymicName
+                <strong>@CurrentUser.SurName[0]. @CurrentUser.Name[0]. @CurrentUser.PatronymicName</strong>
             </a>
-            <a href="#" class="d-flex align-items-center btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--bs-primary); border-color:var(--bs-primary); color:black;">
-            </a>
-            <ul class="dropdown-menu text-small shadow">
+@*             <a href="#" class="d-flex align-items-center btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--bs-primary); border-color:var(--bs-primary); color:black;">
+            </a> *@
+            <ul class="dropdown-menu text-small shadow" data-popper-placement="top-start">
                 <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Edit" asp-route-id="@CurrentUser.Id">Налаштування</a></li>
                 <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id">Профіль</a></li>
                 <li><hr class="dropdown-divider"></li>
@@ -31,9 +30,8 @@
     }
     else
     {
-        <a asp-area="" asp-controller="Account" asp-action="Login" class="d-flex align-items-center btn btn-primary icon-link" aria-expanded="false">
-            <svg class="bi" aria-hidden="true"><use href="#solar--login-2-bold" /></svg>
+        <a asp-area="" asp-controller="Account" asp-action="Login" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none" aria-expanded="false">
+            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use href="#solar--login-2-bold" /></svg>
             Ввійти
         </a>
     }
-@* </ul> *@

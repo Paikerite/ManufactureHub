@@ -75,7 +75,7 @@ app.UseStatusCodePages(async statusCodeContext =>
     statusCodeContext.HttpContext.Response.ContentType = Text.Plain;
 
     await statusCodeContext.HttpContext.Response.WriteAsync(
-        $"Помилка. Статус код: {statusCodeContext.HttpContext.Response.StatusCode}");
+        $"Error. Status code: {statusCodeContext.HttpContext.Response.StatusCode}");
 });
 
 app.MapIdentityApi<ApplicationUser>();

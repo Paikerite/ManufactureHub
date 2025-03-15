@@ -11,51 +11,54 @@
     <link rel="stylesheet" href="~/ManufactureHub.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse flex-column">
-                <div class="position-sticky pt-3 sidebar-sticky">
-                    <a asp-area="" asp-controller="Task" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none icon-link icon-link-hover">
-                        <svg class="bi" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><use xlink:href="#solar--home-2-bold" /></svg>
-                        <span class="fs-5">ManufactureHub</span>
-                    </a>
-                    <hr />
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                            <a asp-area="" asp-controller="Task" asp-action="Index" class="nav-link icon-link">
-                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--checklist-minimalistic-bold" /></svg>
-                                <span>Таски</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link icon-link">
-                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--users-group-two-rounded-line-duotone" /></svg>
-                                <span>Користувачі</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-area="" asp-controller="Section" asp-action="Index" class="nav-link icon-link">
-                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--box-bold" /></svg>
-                                <span>Дільниці</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link icon-link">
-                                <svg class="bi" aria-hidden="true"><use xlink:href="#solar--buildings-outline"></use></svg>
-                                <span>Цехи</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <hr />
-                    <partial name="_LoginPartial" />
-                    <input type="checkbox" class="btn-check" id="toggleSidebar" checked autocomplete="off">
-                    <label class="btn btn-primary" for="toggleSidebar">☰</label>
-                </div>
-            </nav>
-            <main role="main" class="pb-3 pt-3 col-md-9 ms-sm-auto col-lg-10 ">
-                @RenderBody()
-            </main>
+    <div class="d-flex">
+        @* <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse flex-column"> *@
+        <div id="sidebarMenu" class="d-flex flex-column p-3 flex-shrink-0" style="width: 250px;">
+            <div class="sidebar-sticky position-fixed">
+                <a asp-area="" asp-controller="Task" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+                    <svg class="bi pe-none me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#solar--home-2-bold" /></svg>
+                    <span class="fs-4">ManufactureHub</span>
+                </a>
+                <hr />
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="Task" asp-action="Index" class="nav-link">
+                            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--checklist-minimalistic-bold" /></svg>
+                            <span>Таски</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link">
+                            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--users-group-two-rounded-line-duotone" /></svg>
+                            <span>Користувачі</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="Section" asp-action="Index" class="nav-link">
+                            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--box-bold" /></svg>
+                            <span>Дільниці</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link">
+                            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--buildings-outline"></use></svg>
+                            <span>Цехи</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr />
+                <partial name="_LoginPartial" />
+    @*             <div class="vstack">
+                    <div>
+                        <input type="checkbox" class="btn-check" id="toggleSidebar" checked autocomplete="off">
+                        <label class="btn btn-primary" for="toggleSidebar">☰</label>
+                    </div>
+                </div> *@
+           </div>
         </div>
+        <main role="main" class="d-flex pb-3 pt-3 flex-grow-1">
+            @RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -110,7 +113,7 @@
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 5l-6 7l6 7" />
         </symbol>
     </svg>
-    
+
     <svg style="display: none;">
         <symbol id="solar--user-bold" viewBox="0 0 24 24">
             <circle cx="12" cy="6" r="4" fill="currentColor" />
@@ -136,7 +139,7 @@
             const isCollapsed = this.checked; // Checkbox state
             sidebar.classList.toggle('collapsed', !isCollapsed); // Inverse logic: checked = expanded
             // Save the state to localStorage (true = expanded, false = collapsed)
-            localStorage.setItem('sidebarCollapsed', !isCollapsed);
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
         });
 
         // Restore sidebar state on page load

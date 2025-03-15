@@ -49,27 +49,29 @@ button.accept-policy {
 }
 
 /* Custom styles for sidebar animation and icon-only mode */
-#sidebarMenu {
-    width: 16.6667%; /* Default width for col-md-3 (Bootstrap ~200px) */
-    transition: width 0.3s ease-in-out;
+/*#sidebarMenu {
+    width: 16.6667%;*/ /* Default width for col-md-3 (Bootstrap ~200px) */
+    /*transition: width 0.3s ease-in-out;
     position: fixed;
     top: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 1000;*/
     /*color: #ecf0f1;*/
-}
+/*}
 
 #sidebarMenu.collapsed {
-    width: 60px; /* Narrow width for icon-only mode */
-}
+    width: 60px;*/ /* Narrow width for icon-only mode */
+    /*overflow: visible;
+}*/
 
 .sidebar-sticky {
+    position: sticky;
     height: 100vh;
-    overflow-y: auto;
-    padding-top: 10px 15px; /* Adjusted padding to avoid extra space */
+/*    overflow-y: auto;*/
+    /*padding-top: 10px 15px;*/ /* Adjusted padding to avoid extra space */
 }
 
-.nav-link {
+/*.nav-link {
     display: flex;
     align-items: center;
     padding: 10px 15px;
@@ -78,19 +80,19 @@ button.accept-policy {
     transition: background-color 0.3s, padding 0.3s;
 }
 
-.nav-link:hover {
-    background-color: #34495e;
-}
+    .nav-link:hover {
+        background-color: #34495e;
+    }
 
-.nav-link svg {
-    margin-right: 10px;
-    width: 20px;
-    height: 20px;
-}
+    .nav-link svg {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
 
-.nav-link span {
-    transition: opacity 0.3s ease-in-out;
-}
+    .nav-link span {
+        transition: opacity 0.3s ease-in-out;
+    }
 
 #sidebarMenu.collapsed .nav-link span {
     opacity: 0;
@@ -106,40 +108,27 @@ button.accept-policy {
 #sidebarMenu.collapsed .nav-link {
     padding: 10px;
     justify-content: center;
-}
-
-/*.toggle-btn {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1100;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-    .toggle-btn:hover {
-        background-color: #0056b3;
-    }*/
+}*/
 
 /* Ensure main content adjusts when sidebar collapses */
-main {
+/*main {
     transition: margin-left 0.3s ease-in-out;
-    margin-left: 16.6667%; /* Default margin for col-md-3 */
+    margin-left: 0;*/ /* Default margin for col-md-3 */
     /* Remove padding to avoid extra space, use margin instead if needed */
-    padding: 0 0 0 0; /* Override px-md-4 but keep vertical padding */
-}
+    /*padding: 0 0 0 0;*/ /* Override px-md-4 but keep vertical padding */
+    /*padding-top: 1rem;*/ /* pt-3 */
+    /*padding-bottom: 1rem;*/ /* pb-3 */
+    /*padding-left: 1.5rem;*/ /* Default px-md-4 left padding */
+    /*padding-right: 1.5rem;*/ /* Default px-md-4 right padding */
+/*}*/
 
-#sidebarMenu.collapsed + main {
-    margin-left: 60px; /* Adjusted margin for collapsed sidebar */
-}
+/*#sidebarMenu.collapsed + main {
+    margin-left: 60px;*/ /* Adjusted margin for collapsed sidebar */
+    /*padding-left: 0;*/ /* Remove left padding to eliminate gap */
+/*}*/
 
 /* Style for the brand link */
-.icon-link-hover {
+/*.icon-link-hover {
     color: #ecf0f1 !important;
     display: flex;
     align-items: center;
@@ -165,4 +154,17 @@ main {
 #sidebarMenu.collapsed .icon-link-hover {
     padding: 10px;
     justify-content: center;
+}*/
+
+/* Style the toggle button to match the examples */
+#toggleSidebar + label {
+    text-align: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+#toggleSidebar + label:hover {
+    background-color: #0056b3;
 }
