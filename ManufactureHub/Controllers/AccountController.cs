@@ -38,13 +38,39 @@ namespace ManufactureHub.Controllers
         //GET: User
         public async Task<IActionResult> Index()
         {
-            return userManager.Users != null ?
-                        View(await userManager.Users.ToListAsync()) :
-                        Problem("Entity set 'userManager.Users'  is null.");
+            if (userManager.Users != null)
+            {
+                var users = await userManager.Users.ToListAsync();
+                var userRoles = new Dictionary<int, IList<string>>();
+                var ListRoles = new List<string>();
 
-            //return _context.Users != null ?
-            //            View(await _context.Users.ToListAsync()) :
-            //            Problem("Entity set 'EScheduleDbContext.Users'  is null.");
+                foreach (var user in users)
+                {
+                    var roles = await userManager.GetRolesAsync(user);
+                    if (roles == null)
+                    {
+                        break;
+                    }
+
+                    foreach (var item in roles)
+                    {
+                        var rolele = await roleManager.FindByNameAsync(item);
+                        if (rolele != null)
+                        {
+                            ListRoles.Add(rolele.RoleName);
+                        }
+                        userRoles[user.Id] = ListRoles;
+                    }
+                }
+
+                ViewBag.UserRoles = userRoles;
+
+                return View(users);
+            }
+            else
+            {
+                return Problem("Entity set 'userManager.Users' is null.");
+            }
         }
 
         // GET: User/Details/5

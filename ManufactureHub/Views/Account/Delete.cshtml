@@ -9,7 +9,7 @@
             @ViewData["Title"]
         </div>
         <div class="card-body">
-            <h5 class="card-title">Ви впевнені що хочіте <a class="pe-none text-danger" tabindex="-1">видалити </a>акаунт @Model.Name</h5>
+            <h5 class="card-title">Ви впевнені що хочіте <a class="pe-none text-danger" tabindex="-1">видалити</a>акаунт @Model.Name @Model.SurName @Model.PatronymicName</h5>
             <form asp-action="DeleteConfirmed" id="delete-user" method="post">
                 <div asp-validation-summary="All" class="text-danger" role="alert"></div>
                 <input type="hidden" asp-for="Id" />

@@ -12,62 +12,82 @@
 </head>
 <body>
     <div class="d-flex">
-        @* <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse flex-column"> *@
-        <div id="sidebarMenu" class="d-flex flex-column p-3 flex-shrink-0" style="width: 250px;">
+        <div id="sidebarMenu" class="d-flex flex-column p-3 flex-shrink-0 sidebarCustom" style="width: 250px;">
             <div class="sidebar-sticky position-fixed">
                 <a asp-area="" asp-controller="Task" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
                     <svg class="bi pe-none me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#solar--home-2-bold" /></svg>
-                    <span class="fs-4">ManufactureHub</span>
+                    <span class="fs-4 sidebar-title">ManufactureHub</span>
                 </a>
-                <hr />
+                <hr/>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
                         <a asp-area="" asp-controller="Task" asp-action="Index" class="nav-link">
                             <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--checklist-minimalistic-bold" /></svg>
-                            <span>Таски</span>
+                            <span class="sidebar-text">Таски</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link">
-                            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--users-group-two-rounded-line-duotone" /></svg>
-                            <span>Користувачі</span>
-                        </a>
-                    </li>
+                    @if (User.IsInRole("Admin") || (User.IsInRole("HeadFacility")))
+                    {
+                        <li class="nav-item">
+                            <a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link">
+                                <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--users-group-two-rounded-line-duotone" /></svg>
+                                <span class="sidebar-text">Користувачі</span>
+                            </a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a asp-area="" asp-controller="Section" asp-action="Index" class="nav-link">
                             <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--box-bold" /></svg>
-                            <span>Дільниці</span>
+                            <span class="sidebar-text">Дільниці</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link">
                             <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--buildings-outline"></use></svg>
-                            <span>Цехи</span>
+                            <span class="sidebar-text">Цехи</span>
                         </a>
                     </li>
                 </ul>
-                <hr />
+                <hr/>
                 <partial name="_LoginPartial" />
-    @*             <div class="vstack">
-                    <div>
-                        <input type="checkbox" class="btn-check" id="toggleSidebar" checked autocomplete="off">
-                        <label class="btn btn-primary" for="toggleSidebar">☰</label>
-                    </div>
-                </div> *@
+                <button id="toggleSidebar" class="toggle-btn">
+                    <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <use href="#solar--alt-arrow-left-line-duotone" />
+                    </svg>
+                </button>
            </div>
         </div>
-        <main role="main" class="d-flex pb-3 pt-3 flex-grow-1">
+        <main role="main" class="d-flex pb-3 pt-3 flex-grow-1 position-relative">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-auto">
         <div class="container">
             &copy; 2025 - ManufactureHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Конфеденційність</a>
         </div>
     </footer>
 
     <!-- SVG Icons -->
+
+    <svg style="display: none">
+        <symbol id="solar--trash-bin-minimalistic-linear" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M9.17 4a3.001 3.001 0 0 1 5.66 0m5.67 2h-17m15.333 2.5l-.46 6.9c-.177 2.654-.265 3.981-1.13 4.79s-2.196.81-4.856.81h-.774c-2.66 0-3.991 0-4.856-.81c-.865-.809-.954-2.136-1.13-4.79l-.46-6.9M9.5 11l.5 5m4.5-5l-.5 5" />
+        </symbol>
+    </svg>
+
+    <svg style="display:none">
+        <symbol id="solar--info-circle-bold" viewBox="0 0 24 24">
+            <path fill="currentColor" fill-rule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10m-10 5.75a.75.75 0 0 0 .75-.75v-6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75M12 7a1 1 0 1 1 0 2a1 1 0 0 1 0-2" clip-rule="evenodd" />
+        </symbol>
+    </svg>
+
+    <svg style="display:none">
+        <symbol id="solar--pen-new-square-bold" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M21.194 2.806a2.753 2.753 0 0 1 0 3.893l-.496.496a5 5 0 0 1-.533-.151a5.2 5.2 0 0 1-1.968-1.241a5.2 5.2 0 0 1-1.241-1.968a5 5 0 0 1-.15-.533l.495-.496a2.753 2.753 0 0 1 3.893 0M14.58 13.313c-.404.404-.606.606-.829.78a4.6 4.6 0 0 1-.848.524c-.255.121-.526.211-1.068.392l-2.858.953a.742.742 0 0 1-.939-.94l.953-2.857c.18-.542.27-.813.392-1.068q.217-.453.524-.848c.174-.223.376-.425.78-.83l4.916-4.915a6.7 6.7 0 0 0 1.533 2.36a6.7 6.7 0 0 0 2.36 1.533z" />
+            <path fill="currentColor" d="M20.536 20.536C22 19.07 22 16.714 22 12c0-1.548 0-2.842-.052-3.934l-6.362 6.362c-.351.352-.615.616-.912.847a6 6 0 0 1-1.125.696c-.34.162-.694.28-1.166.437l-2.932.977a2.242 2.242 0 0 1-2.836-2.836l.977-2.932c.157-.472.275-.826.437-1.166q.287-.6.696-1.125c.231-.297.495-.56.847-.912l6.362-6.362C14.842 2 13.548 2 12 2C7.286 2 4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465" />
+        </symbol>
+    </svg>
 
     <svg style="display: none;">
         <symbol id="solar--checklist-minimalistic-bold" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465C22 19.072 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464m7.08 4.053a.75.75 0 1 0-1.087-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 8.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5zm-2.457 6.267a.75.75 0 1 0-1.086-1.034l-2.314 2.43l-.6-.63a.75.75 0 1 0-1.086 1.034l1.143 1.2a.75.75 0 0 0 1.086 0zM13 15.25a.75.75 0 0 0 0 1.5h5a.75.75 0 0 0 0-1.5z" clip-rule="evenodd" /></symbol>
@@ -76,6 +96,12 @@
     <svg style="display: none;">
         <symbol id="solar--buildings-outline" viewBox="0 0 24 24">
             <path fill="currentColor" fill-rule="evenodd" d="M14.948 1.25h2.104c.899 0 1.648 0 2.242.08c.628.084 1.195.27 1.65.725c.456.456.642 1.023.726 1.65c.08.595.08 1.345.08 2.243V21.25H22a.75.75 0 0 1 0 1.5H2a.75.75 0 0 1 0-1.5h.25V8.948c0-.898 0-1.648.08-2.242c.084-.628.27-1.195.725-1.65c.456-.456 1.023-.642 1.65-.726c.595-.08 1.345-.08 2.243-.08h3.33c.051-.874.213-1.63.777-2.195c.456-.455 1.023-.64 1.65-.725c.595-.08 1.345-.08 2.243-.08m-3.941 4.5H7c-.964 0-1.612.002-2.095.067c-.461.062-.659.169-.789.3s-.237.327-.3.788C3.753 7.388 3.75 8.036 3.75 9v12.25h4.5V19a.75.75 0 0 1 1.5 0v2.25h4.5V9c0-.964-.002-1.612-.066-2.095c-.063-.461-.17-.659-.3-.789s-.328-.237-.79-.3c-.481-.064-1.127-.066-2.087-.066m4.743 15.5V8.948c0-.898 0-1.648-.08-2.242c-.084-.628-.27-1.195-.726-1.65c-.455-.456-1.022-.642-1.65-.726c-.425-.057-.93-.074-1.51-.078c.05-.7.16-.963.332-1.136c.13-.13.328-.237.79-.3c.482-.064 1.13-.066 2.094-.066h2c.964 0 1.612.002 2.095.067c.461.062.659.169.789.3s.237.327.3.788c.064.483.066 1.131.066 2.095v15.25zM5.25 8A.75.75 0 0 1 6 7.25h6a.75.75 0 0 1 0 1.5H6A.75.75 0 0 1 5.25 8m0 3a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75m0 3a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75" clip-rule="evenodd" />
+        </symbol>
+    </svg>
+
+    <svg style="display:none;">
+        <symbol id="solar--alt-arrow-left-line-duotone" viewBox="0 0 24 24">
+            <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 5l-6 7l6 7" />
         </symbol>
     </svg>
 
@@ -109,8 +135,8 @@
     </svg>
 
     <svg style="display: none;">
-        <symbol id="solar--alt-arrow-left-line-duotone" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 5l-6 7l6 7" />
+        <symbol id="solar--alt-arrow-left-outline" viewBox="0 0 24 24">
+            <path fill="#fff" fill-rule="evenodd" d="M15.488 4.43a.75.75 0 0 1 .081 1.058L9.988 12l5.581 6.512a.75.75 0 1 1-1.138.976l-6-7a.75.75 0 0 1 0-.976l6-7a.75.75 0 0 1 1.057-.081" clip-rule="evenodd" />
         </symbol>
     </svg>
 
@@ -128,32 +154,48 @@
         </symbol>
     </svg>
 
+    <svg style="display: none;">
+        <symbol id="solar--magnifer-linear" viewBox="0 0 24 24">
+            <g fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11.5" cy="11.5" r="9.5" />
+                <path stroke-linecap="round" d="M18.5 18.5L22 22" />
+            </g>
+        </symbol>
+    </svg>
+
+    <svg style="display: none">
+        <symbol id="solar--user-plus-bold" viewBox="0 0 24 24">
+            <circle cx="12" cy="6" r="4" fill="currentColor" />
+            <path fill="currentColor" fill-rule="evenodd" d="M16.5 22c-1.65 0-2.475 0-2.987-.513C13 20.975 13 20.15 13 18.5s0-2.475.513-2.987C14.025 15 14.85 15 16.5 15s2.475 0 2.987.513C20 16.025 20 16.85 20 18.5s0 2.475-.513 2.987C18.975 22 18.15 22 16.5 22m.583-5.056a.583.583 0 1 0-1.166 0v.973h-.973a.583.583 0 1 0 0 1.166h.973v.973a.583.583 0 1 0 1.166 0v-.973h.973a.583.583 0 1 0 0-1.166h-.973z" clip-rule="evenodd" />
+            <path fill="currentColor" d="M15.678 13.503c-.473.005-.914.023-1.298.074c-.643.087-1.347.293-1.928.875c-.582.581-.788 1.285-.874 1.928c-.078.578-.078 1.284-.078 2.034v.172c0 .75 0 1.456.078 2.034c.06.451.18.932.447 1.38H12c-8 0-8-2.015-8-4.5S7.582 13 12 13c1.326 0 2.577.181 3.678.503" />
+        </symbol>
+    </svg>
+
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        // Sidebar toggle functionality
-        document.getElementById('toggleSidebar').addEventListener('change', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebarMenu');
-            const isCollapsed = this.checked; // Checkbox state
-            sidebar.classList.toggle('collapsed', !isCollapsed); // Inverse logic: checked = expanded
-            // Save the state to localStorage (true = expanded, false = collapsed)
-            localStorage.setItem('sidebarCollapsed', isCollapsed);
-        });
+            const toggleBtn = document.getElementById('toggleSidebar');
 
-        // Restore sidebar state on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebar = document.getElementById('sidebarMenu');
+            // Load the sidebar state from localStorage
             const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            const toggleCheckbox = document.getElementById('toggleSidebar');
             if (isCollapsed) {
-                sidebar.classList.remove('collapsed');
-                toggleCheckbox.checked = true; // Ensure checkbox reflects expanded state
-            } else {
                 sidebar.classList.add('collapsed');
-                toggleCheckbox.checked = false; // Ensure checkbox reflects collapsed state
+                toggleBtn.classList.add('collapsed');
             }
+
+            // Toggle sidebar and save state to localStorage
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                toggleBtn.classList.toggle('collapsed');
+
+                // Save the new state to localStorage
+                const isNowCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+            });
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

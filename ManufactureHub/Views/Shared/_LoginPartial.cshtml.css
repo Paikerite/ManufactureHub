@@ -1,0 +1,30 @@
+﻿/* Login partial adjustments */
+.sidebarCustom .login-partial {
+    display: flex;
+    align-items: center;
+    width: 40px;
+}
+
+.sidebarCustom.collapsed .login-partial {
+    justify-content: center; /* Center the icon when collapsed */
+}
+
+.sidebarCustom .login-partial .login-icon {
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: 0.3s ease;
+}
+
+.sidebarCustom.collapsed .login-partial .login-icon {
+    margin-right: 0;
+    transition: 0.3s ease;
+}
+
+/* Ensure the text in login partial collapses */
+.sidebarCustom.collapsed .login-partial .sidebar-text,
+.sidebarCustom.collapsed .login-partial strong {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    transition: 0.3s ease;
+}

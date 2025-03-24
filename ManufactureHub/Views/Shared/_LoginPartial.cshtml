@@ -12,10 +12,10 @@
 
     @if (signInManager.IsSignedIn(User))
     {
-        <div class="dropdown">
+    <div class="dropdown login-partial">
             <a class="d-flex align-items-center text-decoration-none dropdown-toggle" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id" data-bs-toggle="dropdown">
-                <img src="~/@CurrentUser.ProfilePicture" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>@CurrentUser.SurName[0]. @CurrentUser.Name[0]. @CurrentUser.PatronymicName</strong>
+            <img src="~/@CurrentUser.ProfilePicture" alt="" width="32" height="32" class="rounded-circle me-2 login-icon">
+                <strong class="sidebar-text">@CurrentUser.SurName[0]. @CurrentUser.Name[0]. @CurrentUser.PatronymicName</strong>
             </a>
 @*             <a href="#" class="d-flex align-items-center btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--bs-primary); border-color:var(--bs-primary); color:black;">
             </a> *@
@@ -30,8 +30,8 @@
     }
     else
     {
-        <a asp-area="" asp-controller="Account" asp-action="Login" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none" aria-expanded="false">
-            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use href="#solar--login-2-bold" /></svg>
-            Ввійти
+    <a asp-area="" asp-controller="Account" asp-action="Login" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none login-partial" aria-expanded="false">
+        <svg class="bi pe-none me-2 login-icon" width="16" height="16" aria-hidden="true"><use href="#solar--login-2-bold" /></svg>
+        <span class="sidebar-text">Ввійти</span>
         </a>
     }

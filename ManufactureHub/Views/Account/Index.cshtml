@@ -1,2 +1,108 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ManufactureHub.Data.ApplicationUser>
+@inject RoleManager<ApplicationRole> roleManager;
+@inject UserManager<ApplicationUser> userManager;
+
+@{
+    ViewData["Title"] = "Користувачи";
 }
+
+<div class="container-fluid">
+    <div class="card mb-2">
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label class="mb-2">Пошук</label>
+                    <form id="searchinput" method="post" asp-controller="Schedule" asp-action="ChangeData">
+                        <div class="input-group">
+                            <input class="form-control" type="text" name="searchinput" placeholder="Пошук" />
+                            <button type="submit" class="btn btn-outline-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--magnifer-linear" /></svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="row">
+                    <div class="col-auto">
+                        <a class="btn btn-success hstack" asp-action="Create">
+                            <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use href="#solar--user-plus-bold" /></svg>
+                            <span>Додати користувача</span>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>
+                                id
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                                @Html.DisplayNameFor(model => model.SurName)
+                                @Html.DisplayNameFor(model => model.PatronymicName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Position)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmploymentDate)
+                            </th>
+                            <th>
+                                Роль
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem=>item.Id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                    @Html.DisplayFor(modelItem => item.SurName)
+                                    @Html.DisplayFor(modelItem => item.PatronymicName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Position)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmploymentDate.Date)
+                                </td>
+                                <td>
+                                    @(string.Join(", ", ViewBag.UserRoles[item.Id] as IList<string> ?? new List<string>()))
+                                </td>
+                                @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
+                                {
+                                    <td>
+                                        <a class="text-decoration-none" asp-action="Edit" asp-route-id="@item.Id">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--pen-new-square-bold" /></svg>
+                                        </a>
+                                        <a class="text-decoration-none" asp-action="Details" asp-route-id="@item.Id">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--info-circle-bold" /></svg>
+                                        </a>
+                                        <a class="text-decoration-none" asp-action="Delete" asp-route-id="@item.Id">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--trash-bin-minimalistic-linear" /></svg>
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
