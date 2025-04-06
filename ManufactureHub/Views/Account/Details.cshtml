@@ -5,16 +5,6 @@
 
 @{
     ViewData["Title"] = "Інформація про акаунт";
-    int userId = -1;
-    ApplicationRole role = new();
-    if (User.Identity.IsAuthenticated)
-    {
-        ApplicationUser user = new();
-        user = await userManager.FindByEmailAsync(User.Identity.Name);
-        userId = user.Id;
-        var ru = await userManager.GetRolesAsync(user);
-        role = await roleManager.FindByNameAsync(ru.FirstOrDefault());
-    }
 }
 <div class="container">
     <div class="card mb-2 shadow-sm">
@@ -38,7 +28,7 @@
                 <div class="col-8">
                     <div class="card-text">
                         <p>ПІБ: @Model.Name @Model.SurName @Model.PatronymicName</p>
-                        <p>Роль у системі: @role.RoleName;</p>
+                        <p>Роль у системі: @(string.Join(", ", ViewBag.UserRoles as IList<string> ?? new List<string>()))</p>
                         <p>Пошта: @Model.Email</p>
                     </div>
                 </div>
@@ -47,11 +37,11 @@
         <div class="card-footer">
             <div class="row">
                 <div class="col">
-                    @if (userId == Model.Id || User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
+                    @if ((int)ViewBag.UserIdVisitor == Model.Id || User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
                     {
-                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model?.Id" asp-route-userName="@User.Identity.Name">Відредагувати</a>
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Відредагувати</a>
                         <a class="btn btn-success" asp-action="ForgotPassword">Змінити пароль</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id" asp-route-userName="@User.Identity.Name">Видалити акаунт</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Видалити акаунт</a>
                     }
                 </div>
             </div>

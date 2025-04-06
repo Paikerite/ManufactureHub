@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="d-flex">
-        <div id="sidebarMenu" class="d-flex flex-column p-3 flex-shrink-0 sidebarCustom" style="width: 250px;">
+        <div id="sidebarMenu" class="d-flex flex-column p-3 flex-shrink-0 sidebarCustom shadow-sm" style="width: 250px;">
             <div class="sidebar-sticky position-fixed">
                 <a asp-area="" asp-controller="Task" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
                     <svg class="bi pe-none me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#solar--home-2-bold" /></svg>
@@ -42,7 +42,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a asp-area="" asp-controller="Class" asp-action="Index" class="nav-link">
+                        <a asp-area="" asp-controller="Workstation" asp-action="Index" class="nav-link">
                             <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#solar--buildings-outline"></use></svg>
                             <span class="sidebar-text">Цехи</span>
                         </a>
@@ -57,13 +57,13 @@
                 </button>
            </div>
         </div>
-        <main role="main" class="d-flex pb-3 pt-3 flex-grow-1 position-relative">
+        <main role="main" class="d-flex pb-3 pt-3 flex-grow-1">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted mt-auto">
-        <div class="container">
+        <div class="ms-5">
             &copy; 2025 - ManufactureHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Конфеденційність</a>
         </div>
     </footer>
@@ -179,22 +179,45 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebarMenu');
             const toggleBtn = document.getElementById('toggleSidebar');
+            // --- Get references to main content and footer ---
+            const mainContent = document.querySelector('main[role="main"]');
+            const footer = document.querySelector('.footer');
+            // --- Define margin widths ---
+            const sidebarExpandedMargin = '250px';
+            const sidebarCollapsedMargin = '70px'; // Match your collapsed sidebar width
 
-            // Load the sidebar state from localStorage
-            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            if (isCollapsed) {
-                sidebar.classList.add('collapsed');
-                toggleBtn.classList.add('collapsed');
+            // --- Function to apply styles based on collapsed state ---
+            function applyLayout(isCollapsed) {
+                if (!sidebar || !toggleBtn) return; // Safety check
+
+                if (isCollapsed) {
+                    sidebar.classList.add('collapsed');
+                    toggleBtn.classList.add('collapsed');
+                    // Set margins directly using JS
+                    if (mainContent) mainContent.style.marginLeft = sidebarCollapsedMargin;
+                    if (footer) footer.style.marginLeft = sidebarCollapsedMargin;
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    toggleBtn.classList.remove('collapsed');
+                    // Set margins directly using JS
+                    if (mainContent) mainContent.style.marginLeft = sidebarExpandedMargin;
+                    if (footer) footer.style.marginLeft = sidebarExpandedMargin;
+                }
             }
 
-            // Toggle sidebar and save state to localStorage
-            toggleBtn.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                toggleBtn.classList.toggle('collapsed');
+            // Load the sidebar state from localStorage and apply initial layout
+            const isInitiallyCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            // Apply layout on page load
+            applyLayout(isInitiallyCollapsed);
 
-                // Save the new state to localStorage
-                const isNowCollapsed = sidebar.classList.contains('collapsed');
+            // Toggle sidebar, save state, and apply layout on click
+            toggleBtn.addEventListener('click', function() {
+                if (!sidebar) return;
+                // Determine the new state *after* toggle (or before based on current state)
+                const isNowCollapsed = !sidebar.classList.contains('collapsed');
                 localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+                // Apply layout changes
+                applyLayout(isNowCollapsed);
             });
         });
     </script>

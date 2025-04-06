@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Login" asp-antiforgery="true">
+                    <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" asp-antiforgery="true">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="mb-3">
                             <div class="form-floating">

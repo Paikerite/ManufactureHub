@@ -13,7 +13,7 @@
             <div class="row mb-2">
                 <div class="col-md-4">
                     <label class="mb-2">Пошук</label>
-                    <form id="searchinput" method="post" asp-controller="Schedule" asp-action="ChangeData">
+                    <form id="searchinput" method="post" asp-controller="Account" asp-action="SearchUser">
                         <div class="input-group">
                             <input class="form-control" type="text" name="searchinput" placeholder="Пошук" />
                             <button type="submit" class="btn btn-outline-secondary">
@@ -68,7 +68,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem=>item.Id)
+                                    @Html.DisplayFor(modelItem => item.Id)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)

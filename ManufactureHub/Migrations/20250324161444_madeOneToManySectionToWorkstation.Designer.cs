@@ -4,6 +4,7 @@ using ManufactureHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManufactureHub.Migrations
 {
     [DbContext(typeof(ManufactureHubContext))]
-    partial class ManufactureHubContextModelSnapshot : ModelSnapshot
+    [Migration("20250324161444_madeOneToManySectionToWorkstation")]
+    partial class madeOneToManySectionToWorkstation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,8 +193,7 @@ namespace ManufactureHub.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdTeamLead")
                         .HasColumnType("int");

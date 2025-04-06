@@ -10,6 +10,7 @@ using ManufactureHub.Data;
 using ManufactureHub.Models;
 using ManufactureHub.Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ManufactureHub.Controllers
 {
@@ -40,16 +41,19 @@ namespace ManufactureHub.Controllers
         {
             if (userManager.Users != null)
             {
-                var users = await userManager.Users.ToListAsync();
+                var users = await userManager.Users.OrderBy(us=>us.SurName).ToListAsync();
                 var userRoles = new Dictionary<int, IList<string>>();
                 var ListRoles = new List<string>();
 
                 foreach (var user in users)
                 {
                     var roles = await userManager.GetRolesAsync(user);
+                    ListRoles.Clear();
+
                     if (roles == null)
                     {
-                        break;
+                        userRoles[user.Id] = new List<string> { "Err. No roles" };
+                        continue;
                     }
 
                     foreach (var item in roles)
@@ -59,7 +63,7 @@ namespace ManufactureHub.Controllers
                         {
                             ListRoles.Add(rolele.RoleName);
                         }
-                        userRoles[user.Id] = ListRoles;
+                        userRoles[user.Id] = new List<string>(ListRoles);
                     }
                 }
 
@@ -72,6 +76,7 @@ namespace ManufactureHub.Controllers
                 return Problem("Entity set 'userManager.Users' is null.");
             }
         }
+
 
         // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -87,6 +92,42 @@ namespace ManufactureHub.Controllers
                 return NotFound("Юзер заданого id не знайдений");
             }
 
+            if (User.Identity is null)
+            {
+                return Unauthorized();
+            }
+
+            if (User.Identity.Name is null)
+            {
+                return BadRequest();
+            }
+
+            var uussserrri = await userManager.FindByEmailAsync(User.Identity.Name);
+            if (uussserrri is null)
+            {
+                return NotFound();
+            }
+            ViewBag.UserIdVisitor = uussserrri.Id;
+
+            var roleResult = await userManager.GetRolesAsync(userAccountViewModel);
+
+            var roles = await userManager.GetRolesAsync(userAccountViewModel);
+            if (roles == null)
+            {
+                return NoContent();
+            }
+
+            var ListRoles = new List<string>();
+            foreach (var item in roles)
+            {
+                var rolele = await roleManager.FindByNameAsync(item);
+                if (rolele != null)
+                {
+                    ListRoles.Add(rolele.RoleName);
+                }
+            }
+
+            ViewBag.UserRoles = ListRoles;
             return View(userAccountViewModel);
         }
 
@@ -259,28 +300,11 @@ namespace ManufactureHub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,HeadFacility")]
-        public async Task<IActionResult> Create(IFormFile fileAvatar, [Bind("Name,SurName,PatronymicName,Role,Email,Password,ConfirmPassword")] RegisterModel userAccountViewModel, string? returnUrl = null)
+        public async Task<IActionResult> Create([Bind("Name,SurName,PatronymicName,Role,Email,Position,Password,ConfirmPassword")] RegisterModel userAccountViewModel, string? returnUrl = "")
         {
             if (ModelState.IsValid)
             {
-                string? pathToImage = string.Empty;
-
-                if (fileAvatar is not null)
-                {
-                    try
-                    {
-                        pathToImage = await UploadFile(fileAvatar);
-                    }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
-                        return View(userAccountViewModel);
-                    }
-                }
-                else
-                {
-                    pathToImage = UrlToDefaultAvatar;
-                }
+                string? pathToImage = "user.svg";
 
                 ApplicationUser user = new ApplicationUser()
                 {
@@ -290,7 +314,7 @@ namespace ManufactureHub.Controllers
                     ProfilePicture = pathToImage,
                     Email = userAccountViewModel.Email!,
                     UserName = userAccountViewModel.Email!,
-                    Position = "Системний адміністратор",
+                    Position = userAccountViewModel.Position!,
                     EmploymentDate = DateTime.Today,
                     LastLoginDate = DateTime.Now,
                     LastLoginIP = "0.0.0.0",
@@ -322,11 +346,11 @@ namespace ManufactureHub.Controllers
                         }
                     }
 
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    //await signInManager.SignInAsync(user, isPersistent: false);
+                    //return LocalRedirect(returnUrl);
 
                     //await signInManager.SignInAsync(user, isPersistent: false);
-                    //return RedirectToAction(nameof(ScheduleController.Index), "Schedule");
+                    return RedirectToAction(nameof(AccountController.Index), "Account");
                 }
                 foreach (var item in result.Errors)
                 {
@@ -360,7 +384,7 @@ namespace ManufactureHub.Controllers
                 Name = accountUser.Name,
                 SurName = accountUser.SurName,
                 PatronymicName = accountUser.PatronymicName,
-                Email = accountUser.Email,
+                Position = accountUser.Position,
                 Role = identityRole.RoleEnum,
                 //ProfilePicture = accountUser.ProfilePicture,
             };
@@ -374,11 +398,11 @@ namespace ManufactureHub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,HeadFacility")]
-        public async Task<IActionResult> Edit(IFormFile fileAvatar, int id, [Bind("Id,Name,SurName,PatronymicName,Role,Email,Password")] EditModel editModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Name,SurName,PatronymicName,Role,Position")] EditModel editModel)
         {
             if (id != editModel.Id)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             if (ModelState.IsValid)
@@ -411,12 +435,12 @@ namespace ManufactureHub.Controllers
                     user.Name = editModel.Name;
                     user.SurName = editModel.SurName;
                     user.PatronymicName = editModel.PatronymicName;
-                    user.Email = editModel.Email;
+                    user.Position = editModel.Position;
 
                     var resultupdate = await userManager.UpdateAsync(user);
                     await signInManager.RefreshSignInAsync(user);
                 }
-                return RedirectToAction(nameof(TaskController.Index), "Task");
+                return RedirectToAction(nameof(TaskController.Index), "Account");
             }
             return View(editModel);
         }
@@ -445,7 +469,7 @@ namespace ManufactureHub.Controllers
         }
 
         // POST: User/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,HeadFacility")]
         public async Task<IActionResult> DeleteConfirmed(int Id)
@@ -467,7 +491,7 @@ namespace ManufactureHub.Controllers
                 throw new InvalidOperationException($"Трапилась помилка під час видалення юзера {userId}");
             }
 
-            await signInManager.SignOutAsync();
+            //await signInManager.SignOutAsync();
 
             logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
 

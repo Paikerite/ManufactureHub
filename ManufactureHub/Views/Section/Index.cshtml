@@ -1,53 +1,85 @@
-﻿@model IEnumerable<ManufactureHub.Models.SectionViewModel>
+﻿@using ManufactureHub.Data.Enums
+@model IEnumerable<ManufactureHub.Models.SectionViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Секції";
 }
 
-<h1>Index</h1>
+<div class="container-fluid board-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Board</h2>
+        <a asp-action="Create" class="btn btn-primary">Створити</a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrimaryColor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdTeamLead)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrimaryColor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTeamLead)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <div class="row">
+        @foreach (var sct in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <!-- Section Header -->
+                    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: @sct.PrimaryColor;">
+                        <h5 class="mb-0">@sct.Name</h5>
+                        <span class="badge bg-secondary">@sct.Tasks.Count</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Operators -->
+                        <div class="mb-3">
+                            @foreach (var oprts in sct.Users)
+                            {
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="@oprts.ProfilePicture" alt="@oprts.Name" class="rounded-circle me-2" width="32" height="32">
+                                    <span>@oprts.Name</span>
+                                    <span class="ms-2 rounded-circle d-inline-block" style="width: 12px; height: 12px; background-color: @(oprts.IsActive ? "green" : "gray");"></span>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Tasks -->
+                        @foreach (var task in sct.Tasks)
+                        {
+                            <div class="mb-3 border p-3 rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        @task.Name
+                                    </h6>
+                                    <small class="text-muted">
+                                        @{
+                                            var daysDiff = (task.Deadline - DateTime.Now).Days;
+                                            if (daysDiff < 0)
+                                            {
+                                                <span>@Math.Abs(daysDiff) days ago</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Due in @daysDiff days</span>
+                                            }
+                                        }
+                                    </small>
+                                </div>
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">@task.StatusTask</small>
+                                    <span class="badge @GetPriorityClass(task.Priority)">
+                                        @task.Priority
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    string GetPriorityClass(Priority priority)
+    {
+        return priority switch
+        {
+            Priority.Low => "bg-success",
+            Priority.Medium => "bg-warning",
+            Priority.High => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
 }
-    </tbody>
-</table>

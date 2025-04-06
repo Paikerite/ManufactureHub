@@ -4,16 +4,13 @@
     ViewData["Title"] = "Редагування профіля";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<hr />
 <div class="container">
     <div class="row justify-content-center">
         <div class="card shadow-sm col-md-5 col-lg-6">
             <div class="card-body">
                 <div class="row">
-                    <form asp-action="Edit" enctype="multipart/form-data">
-                        <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                         <input type="hidden" asp-for="Id" />
                         <div class="mb-3">
                             <label asp-for="Name" class="control-label">Ім'я</label>
@@ -30,26 +27,38 @@
                             <input asp-for="PatronymicName" class="form-control" />
                             <span asp-validation-for="PatronymicName" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
+@*                         <div class="mb-3">
                             <label class="control-label">Зображення профіля</label>
                             <input type="file" name="fileAvatar" accept=".png, .jpeg, .jpg" class="form-control" />
-                        </div>
-                        <h4 class="mb-3">Роль</h4>
+                        </div> *@
+                        <h4 class="mb-3">Роль у системі</h4>
                         <div class="my-3">
                             <div class="form-check">
-                                <input asp-for="Role" id="student" name="Role" type="radio" value="Student" checked class="form-check-input" />
-                                <label class="form-check-label" for="student">Учень</label>
+                                <input asp-for="Role" id="worker" name="Role" type="radio" value="Worker" checked class="form-check-input" />
+                                <label class="form-check-label" for="worker">Робітник</label>
                             </div>
                             <div class="form-check">
-                                <input asp-for="Role" id="teacher" name="Role" type="radio" value="Teacher" class="form-check-input" />
-                                <label class="form-check-label" for="teacher">Вчитель</label>
+                                <input asp-for="Role" id="teamLeadSection" name="Role" type="radio" value="TeamLeadSection" class="form-check-input" />
+                                <label class="form-check-label" for="teamLeadSection">Керівник дільниці</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="Role" id="teamLeadWorkstation" name="Role" type="radio" value="TeamLeadWorkstation" class="form-check-input" />
+                                <label class="form-check-label" for="teamLeadWorkstation">Керівник цеху</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="Role" id="headFacility" name="Role" type="radio" value="HeadFacility" class="form-check-input" />
+                                <label class="form-check-label" for="headFacility">Директор виробництва</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="Role" id="admin" name="Role" type="radio" value="Admin" class="form-check-input" />
+                                <label class="form-check-label" for="admin">Адмін</label>
                             </div>
                         </div>
                         <span asp-validation-for="Role" class="text-danger"></span>
                         <div class="mb-3">
-                            <label asp-for="Email" class="control-label">Електронна пошта</label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <label asp-for="Position" class="control-label">Позиція</label>
+                            <input asp-for="Position" class="form-control" />
+                            <span asp-validation-for="Position" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <input type="submit" value="Зберегти" class="btn btn-primary" />

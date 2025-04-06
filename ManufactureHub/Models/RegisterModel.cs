@@ -17,7 +17,7 @@ namespace ManufactureHub.Models
         [Required(ErrorMessage = "Не вказано прізвище по батькові")]
         public string? PatronymicName { get; set; }
 
-        public string? ProfilePicture { get; set; }
+        //public string? ProfilePicture { get; set; }
 
         [Required(ErrorMessage = "Будь ласка, оберіть роль в системі")]
         [EnumDataType(typeof(Roles), ErrorMessage = "Будь ласка, оберіть роль в системі з переліку")]

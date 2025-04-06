@@ -40,6 +40,6 @@ namespace ManufactureHub.Data
         public DateTime LastLoginDate { get; set; } // Останній вхід в систему
         public string LastLoginIP { get; set; } // IP-адреса останнього входу
 
-        public List<SectionViewModel> Sections { get; set; }
+        public List<SectionViewModel> Sections { get; set; } = new();
     }
 }

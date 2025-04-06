@@ -25,8 +25,8 @@ namespace ManufactureHub.Models
         [EnumDataType(typeof(Roles), ErrorMessage = "Будь ласка, оберіть роль в системі з переліку")]
         public Roles Role { get; set; }
 
-        [Required(ErrorMessage = "Не вказан Email")]
-        [DataType(DataType.EmailAddress)]
-        public string? Email { get; set; }
+        //[Required(ErrorMessage = "Не вказан Email")]
+        //[DataType(DataType.EmailAddress)]
+        //public string? Email { get; set; }
     }
 }

@@ -40,14 +40,24 @@ button.accept-policy {
     line-height: inherit;
 }
 
-.footer {
+/*.footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     white-space: nowrap;
     line-height: 60px;
+}*/
+
+html {
+    height: 100%; /* Needed for min-height on body */
 }
 
+body {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    min-height: 100%; /* Ensure body takes at least full viewport height */
+    margin: 0; /* Remove default body margin */
+}
 
 .sidebar-sticky {
     position: sticky;
@@ -149,14 +159,32 @@ button.accept-policy {
 }
 
 /* Adjust main content when sidebar collapses */
-main {
-    margin-left: 250px; /* Default sidebar width */
-    transition: margin-left 0.3s ease;
+/*main {*/
+    /*margin-left: 250px;*/ /* Default sidebar width */
+    /*transition: margin-left 0.3s ease;
     flex-grow: 1;
     padding: 20px;
-}
+}*/
 
-.sidebarCustom.collapsed ~ main {
+/*.sidebarCustom.collapsed ~ main {
     margin-left: 70px;
+}*/
+
+/* --- Footer Styles - *** MODIFY THESE *** --- */
+.footer {
+    /* position: absolute; */ /* <<< REMOVE THIS */
+    /* bottom: 0; */ /* <<< REMOVE THIS */
+    /* width: 100%; */ /* <<< REMOVE THIS */
+    /* Keep existing styles if needed */
+    white-space: nowrap;
+    line-height: 60px;
+    border-top: 1px solid #e5e5e5; /* Keep */
+    /* --- ADD dynamic margin logic like main --- */
+    /*margin-left: 250px;*/ /* Default sidebar width */
+    /*transition: margin-left 0.3s ease;*/ /* Add transition */
+    flex-shrink: 0; /* Prevent footer from shrinking */
+    /*background-color: #f8f9fa;*/ /* Optional: Add background */
+    padding: 0 20px; /* Optional: Add some padding */
+    /* text-align: center; /* Optional: Center text */
 }
 
