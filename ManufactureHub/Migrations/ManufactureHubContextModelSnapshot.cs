@@ -34,7 +34,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ApplicationUserSectionViewModel");
+                    b.ToTable("ApplicationUserSectionViewModel", (string)null);
                 });
 
             modelBuilder.Entity("ManufactureHub.Data.ApplicationRole", b =>
@@ -212,7 +212,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("WorkstationId");
 
-                    b.ToTable("Sections");
+                    b.ToTable("Sections", (string)null);
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.TaskViewModel", b =>
@@ -257,7 +257,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasIndex("SectionId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("ManufactureHub.Models.WorkstationViewModel", b =>
@@ -282,7 +282,7 @@ namespace ManufactureHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workstations");
+                    b.ToTable("Workstations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

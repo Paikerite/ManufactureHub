@@ -10,10 +10,10 @@
         <div class="card shadow-sm col-md-5 col-lg-6">
             <div class="card-body">
                 <div class="row">
-                    <form enctype="multipart/form-data" asp-action="Create" method="post">
+                    <form asp-action="Create" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="mb-3">
-                            <label asp-for="Name" class="control-label">Ім'я</label>
+                            <label asp-for="Name" class="control-label">Назва секції</label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
@@ -28,7 +28,7 @@
                             <span asp-validation-for="PrimaryColor" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="WorkstationId" class="control-label">Цех</label>
+                            <label asp-for="WorkstationId" class="control-label">Цех до якого відноситься секція</label>
                             <select asp-for="WorkstationId" class="form-select" asp-items="Model.WorkstationsSelect"></select>
                             <span asp-validation-for="WorkstationId" class="text-danger"></span>
                         </div>
@@ -38,12 +38,12 @@
                             <span asp-validation-for="TeamLeadId" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="UsersWorkersId" class="control-label">Робітники які прив'язані до секції</label>
-                            <select asp-for="UsersWorkersId" class="form-select" asp-items="Model.UsersWorkersSelect"></select>
+                            <label asp-for="UsersWorkersId" class="control-label">Робітники які будуть прив'язані до секції (Необов'язково)</label>
+                            <select id="UsersWorkersId" asp-for="UsersWorkersId" name="UsersWorkersId" class="form-select" asp-items="Model.UsersWorkersSelect" multiple></select>
                             <span asp-validation-for="UsersWorkersId" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-secondary w-100">Зареєструватися</button>
+                            <button type="submit" class="btn btn-secondary w-100">Створити</button>
                         </div>
                     </form>
                 </div>
@@ -56,4 +56,13 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function() {
+            $('#UsersWorkersId').select2({
+                placeholder: "Оберіть робітників",
+                allowClear: true,
+                width: '100%'
+            });
+        });
+    </script>
 }

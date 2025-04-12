@@ -1,0 +1,13 @@
+﻿.board-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.list-group-item {
+    padding: 10px 15px;
+}
+
+.badge {
+    font-size: 0.9em;
+}

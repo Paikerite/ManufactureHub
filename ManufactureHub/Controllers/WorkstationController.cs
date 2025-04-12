@@ -22,7 +22,13 @@ namespace ManufactureHub.Controllers
         // GET: Workstation
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Workstations.ToListAsync());
+            var workstations = await _context.Workstations
+                .Include(w => w.Sections)
+                .ThenInclude(s => s.Users)
+                .Include(w => w.Sections)
+                .ThenInclude(s => s.Tasks)
+                .ToListAsync();
+            return View(workstations);
         }
 
         // GET: Workstation/Details/5

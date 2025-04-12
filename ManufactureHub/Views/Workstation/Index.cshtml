@@ -1,47 +1,71 @@
 ﻿@model IEnumerable<ManufactureHub.Models.WorkstationViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Цехи";
 }
 
-<h1>Index</h1>
+<div class="container board-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Дашборд цехів</h2>
+        @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
+        {
+            <a asp-action="Create" class="btn btn-primary">Створити</a>
+        }
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdTeamLead)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTeamLead)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="row">
+        @foreach (var workstation in Model)
+        {
+            <div class="col-md-4 mb-4 w-50">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <a asp-controller="Workstation" asp-action="Details" asp-route-id="@workstation.Id">
+                            @workstation.Name
+                        </a>
+                        <!-- Dropdown Button -->
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" 
+                                    id="dropdownMenuButton-@workstation.Id" data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@workstation.Id">
+                                <li>
+                                    <a class="dropdown-item" 
+                                       asp-action="Edit" 
+                                       asp-route-id="@workstation.Id">Відредагувати</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger"
+                                       asp-action="Delete"
+                                       asp-route-id="@workstation.Id">Видалити</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>@workstation.Description</p>
+                        <p><strong>Секції:</strong> @workstation.Sections.Count</p>
+                        <ul class="list-group">
+                            @foreach (var sec in workstation.Sections)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span style="background-color: @sec.PrimaryColor; width: 10px; height: 10px; display: inline-block; margin-right: 5px;"></span>
+                                        <a asp-controller="Section" asp-action="Details" asp-route-id="@sec.Id">
+                                            @sec.Name
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-primary ms-2">@sec.Users.Count Робітники</span>
+                                        <span class="badge bg-secondary ms-2">@sec.Tasks.Count Завдання</span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

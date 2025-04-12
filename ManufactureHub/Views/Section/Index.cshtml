@@ -7,8 +7,11 @@
 
 <div class="container-fluid board-container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Board</h2>
-        <a asp-action="Create" class="btn btn-primary">Створити</a>
+        <h2>Дашборд секцій</h2>
+        @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility") || User.IsInRole("TeamLeadWorkstation"))
+        {
+            <a asp-action="Create" class="btn btn-primary">Створити</a>
+        }
     </div>
 
     <div class="row">
@@ -18,8 +21,29 @@
                 <div class="card shadow-sm">
                     <!-- Section Header -->
                     <div class="card-header d-flex justify-content-between align-items-center" style="background-color: @sct.PrimaryColor;">
-                        <h5 class="mb-0">@sct.Name</h5>
-                        <span class="badge bg-secondary">@sct.Tasks.Count</span>
+                        <h5 class="mb-0"><a asp-action="Details" asp-route-id="@sct.Id" class="link-light link-underline-light text-decoration-none">@sct.Name</a></h5>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary me-2">@sct.Tasks.Count</span>
+                            <!-- Dropdown Button -->
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility") || User.IsInRole("TeamLeadWorkstation") || User.IsInRole("TeamLeadSection"))
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@sct.Id">Редагувати</a></li>
+                                        }
+                                        @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility") || User.IsInRole("TeamLeadWorkstation"))
+                                        {
+                                            <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@sct.Id">Видалити</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
                     </div>
                     <div class="card-body">
                         <!-- Operators -->
@@ -27,8 +51,15 @@
                             @foreach (var oprts in sct.Users)
                             {
                                 <div class="d-flex align-items-center mb-2">
-                                    <img src="@oprts.ProfilePicture" alt="@oprts.Name" class="rounded-circle me-2" width="32" height="32">
-                                    <span>@oprts.Name</span>
+                                    <img src="@oprts.ProfilePicture" alt="@oprts.Name" class="rounded-circle me-2" width="32" height="32" />
+                                    @if(oprts.Id == sct.IdTeamLead)
+                                    {
+                                        <span><a asp-controller="Account" asp-action="Details" asp-route-id="@oprts.Id" class="link-dark link-underline-light text-decoration-none">@oprts.SurName @oprts.Name[0]. @oprts.PatronymicName[0]. <p class="fs-6 font-monospace link-primary">Тімлідер</p></a></span>
+                                    }
+                                    else
+                                    {
+                                        <span><a asp-controller="Account" asp-action="Details" asp-route-id="@oprts.Id" class="link-dark link-underline-light text-decoration-none">@oprts.SurName @oprts.Name[0]. @oprts.PatronymicName[0].</a></span>
+                                    }
                                     <span class="ms-2 rounded-circle d-inline-block" style="width: 12px; height: 12px; background-color: @(oprts.IsActive ? "green" : "gray");"></span>
                                 </div>
                             }

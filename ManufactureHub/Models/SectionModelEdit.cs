@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ManufactureHub.Models
 {
-    public class SectionModelPost
+    public class SectionModelEdit
     {
+        [Key]
+        public int Id { get; set; }
         [Required(ErrorMessage = "Необхідне назва секції")]
         [MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
         public string Name { get; set; }
@@ -27,5 +29,7 @@ namespace ManufactureHub.Models
         //[Required(ErrorMessage = "Необхідно обрати робітників до секції")]
         public IEnumerable<string> UsersWorkersId { get; set; }
         public List<SelectListItem> UsersWorkersSelect { get; set; } = new List<SelectListItem>();
+
+        public List<TaskViewModel> Tasks { get; set; } = new();
     }
 }
