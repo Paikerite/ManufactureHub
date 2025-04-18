@@ -1,42 +1,137 @@
 ﻿@model ManufactureHub.Models.SectionViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Інформація про секцію";
+
+    var teamleadIdSection = Model.IdTeamLead;
+    var teamLeadinfo = Model.Users.FirstOrDefault(u => u.Id == teamleadIdSection); //what
+    // if (Model.Workstation is null) throw new Exception("Work fuck");
+    // if (teamLeadinfo is null) throw new Exception("Lead fuck");
+
 }
+<div class="container">
+    <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="hstack">
+                    <div class="col text-center" style="background-color: @Model.PrimaryColor">
+                        <h2 class="fw-bold">@Model.Name</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    @* col-8 *@
+                    <div class="card-text">
+                        <p>Назва секції: @Model.Name</p>
+                        <p>Опис секції: @Model.Description</p>
+                        <p>Назва цеху до якого відноситься секція: <a asp-controller="Workstation" asp-action="Details" asp-route-id="@Model.WorkstationId">@Model.Workstation.Name</a></p>
+                        <p>TeamLead секції: @teamLeadinfo.Name @teamLeadinfo.SurName @teamLeadinfo.PatronymicName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col">
+                    @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
+                    {
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Відредагувати</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Видалити акаунт</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 
-<h1>Details</h1>
-
-<div>
-    <h4>SectionViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PrimaryColor)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PrimaryColor)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdTeamLead)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdTeamLead)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="card-text text-center">
+                        <h3>Список співробітників секції</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        ПІБ
+                                    </th>
+                                    <th>
+                                        Позиція
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Users)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a class="link-opacity-75-hover" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@item.Id">
+                                                @item.SurName @item.Name @item.PatronymicName
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @item.Position
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="card-text text-center">
+                        <h3>Список тасків</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Назва
+                                    </th>
+                                    <th>
+                                        Кінцева дата здачи
+                                    </th>
+                                    <th>
+                                        Пріоритет
+                                    </th>
+                                    <th>
+                                        Статус
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a class="link-opacity-75-hover" asp-area="" asp-controller="Task" asp-action="Details" asp-route-id="@item.Id">
+                                                @item.Name
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @item.Deadline
+                                        </td>
+                                        <td>
+                                            @item.Priority.ToString()
+                                        </td>
+                                        <td>
+                                            @item.StatusTask.ToString()
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

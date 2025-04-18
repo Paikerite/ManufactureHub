@@ -30,6 +30,6 @@ namespace ManufactureHub.Models
         public IEnumerable<string> UsersWorkersId { get; set; }
         public List<SelectListItem> UsersWorkersSelect { get; set; } = new List<SelectListItem>();
 
-        public List<TaskViewModel> Tasks { get; set; } = new();
+        //public List<TaskViewModel> Tasks { get; set; } = new();
     }
 }

@@ -14,19 +14,20 @@ namespace ManufactureHub.Controllers
     {
         private readonly ManufactureHubContext _context;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<ApplicationRole> roleManager;
 
-        public SectionController(ManufactureHubContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+        public SectionController(ManufactureHubContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             this.userManager = userManager;
-            this.roleManager = roleManager;
         }
 
         // GET: Section
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Sections.Include(i => i.Tasks).Include(b => b.Users).ToListAsync());
+            return View(await _context.Sections
+                .Include(i => i.Tasks)
+                .Include(b => b.Users)
+                .ToListAsync());
         }
 
         // GET: Section/Details/5
@@ -38,7 +39,11 @@ namespace ManufactureHub.Controllers
             }
 
             var sectionViewModel = await _context.Sections
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(i => i.Users)
+                .Include(i => i.Tasks)
+                .Include(w => w.Workstation)
+                .FirstOrDefaultAsync(m => m.Id == id); 
+
             if (sectionViewModel == null)
             {
                 return NotFound();
@@ -152,7 +157,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: Section/Edit/5
-        [Authorize(Roles = "Admin,HeadFacility,TeamLeadWorkstation,TeamLeadSection")]
+        [Authorize(Roles = "Admin,HeadFacility,TeamLeadWorkstation")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -228,10 +233,10 @@ namespace ManufactureHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,HeadFacility,TeamLeadWorkstation,TeamLeadSection")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PrimaryColor,WorkstationId,TeamLeadId,UsersWorkersId,Tasks")] SectionModelEdit sectionModelPost)
+        [Authorize(Roles = "Admin,HeadFacility,TeamLeadWorkstation")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PrimaryColor,WorkstationId,TeamLeadId,UsersWorkersId")] SectionModelEdit sectionModelEdit)
         {
-            if (id != sectionModelPost.Id)
+            if (id != sectionModelEdit.Id)
             {
                 return NotFound();
             }
@@ -240,14 +245,14 @@ namespace ManufactureHub.Controllers
 
             if (ModelState.IsValid)
             {
-                var convertResId = int.TryParse(sectionModelPost.TeamLeadId, out int teamLeadId);
+                var convertResId = int.TryParse(sectionModelEdit.TeamLeadId, out int teamLeadId);
                 if (!convertResId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id тімліда");
                     return View();
                 }
 
-                var convertResIdId = int.TryParse(sectionModelPost.WorkstationId, out int workstationId);
+                var convertResIdId = int.TryParse(sectionModelEdit.WorkstationId, out int workstationId);
                 if (!convertResIdId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id цеху");
@@ -265,16 +270,16 @@ namespace ManufactureHub.Controllers
                 }
 
                 // Update scalar properties
-                sectionViewModel.Name = sectionModelPost.Name;
-                sectionViewModel.Description = sectionModelPost.Description;
-                sectionViewModel.PrimaryColor = sectionModelPost.PrimaryColor;
+                sectionViewModel.Name = sectionModelEdit.Name;
+                sectionViewModel.Description = sectionModelEdit.Description;
+                sectionViewModel.PrimaryColor = sectionModelEdit.PrimaryColor;
                 sectionViewModel.IdTeamLead = teamLeadId;
                 sectionViewModel.WorkstationId = workstationId;
                 //sectionViewModel.Tasks = sectionModelPost.Tasks; // Be cautious with Tasks; ensure they're handled correctly
 
                 // Handle Users collection
-                var newUserIds = sectionModelPost.UsersWorkersId?.ToList() ?? new List<string>();
-                newUserIds.Add(sectionModelPost.TeamLeadId); // Include team lead
+                var newUserIds = sectionModelEdit.UsersWorkersId?.ToList() ?? new List<string>();
+                newUserIds.Add(sectionModelEdit.TeamLeadId); // Include team lead
 
                 // Get existing user IDs
                 var existingUserIds = sectionViewModel.Users.Select(u => u.Id.ToString()).ToList();
@@ -356,11 +361,11 @@ namespace ManufactureHub.Controllers
                     // Log the exception for debugging
                     Console.WriteLine(ex.InnerException?.Message);
                     ModelState.AddModelError("", "Помилка при збереженні змін. Спробуйте ще раз.");
-                    return View(sectionModelPost);
+                    return View(sectionModelEdit);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sectionModelPost);
+            return View(sectionModelEdit);
         }
 
         // GET: Section/Delete/5
