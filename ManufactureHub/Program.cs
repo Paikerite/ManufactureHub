@@ -80,20 +80,6 @@ app.UseStatusCodePages(async statusCodeContext =>
 
 app.MapIdentityApi<ApplicationUser>();
 
-//app.Use(async (ctx, next) =>
-//{
-//    await next();
-
-//    if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
-//    {
-//        //Re-execute the request so the user gets the error page
-//        string originalPath = ctx.Request.Path.Value;
-//        ctx.Items["originalPath"] = originalPath;
-//        ctx.Request.Path = "/Home/404";
-//        await next();
-//    }
-//});
-
 app.UseHttpsRedirection();
 app.UseRouting();
 

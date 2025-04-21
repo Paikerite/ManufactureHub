@@ -18,11 +18,7 @@ namespace ManufactureHub.Data
         [Required(ErrorMessage = "Не вказано прізвище по батькові")]
         [MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
         public string PatronymicName { get; set; }
-        public string? ProfilePicture { get; set; }
-
-        //[Required(ErrorMessage = "Не вказано до якого виробництво відноситься")]
-        //[MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
-        //public string Department { get; set; } // Відділ (наприклад, "Виробництво", "IT", "Бухгалтерія")
+        public string? ProfilePicture { get; set; } //Аватар
 
         [Display(Name = "Позиція")]
         [Required(ErrorMessage = "Не вказана посада")]

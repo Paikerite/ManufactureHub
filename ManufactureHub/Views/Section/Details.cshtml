@@ -4,7 +4,7 @@
     ViewData["Title"] = "Інформація про секцію";
 
     var teamleadIdSection = Model.IdTeamLead;
-    var teamLeadinfo = Model.Users.FirstOrDefault(u => u.Id == teamleadIdSection); //what
+    var teamLeadinfo = Model.Users.FirstOrDefault(u => u.Id == teamleadIdSection);
     // if (Model.Workstation is null) throw new Exception("Work fuck");
     // if (teamLeadinfo is null) throw new Exception("Lead fuck");
 
@@ -38,10 +38,10 @@
         <div class="card-footer">
             <div class="row">
                 <div class="col">
-                    @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
+                    @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility") || User.IsInRole("TeamLeadWorkstation"))
                     {
                         <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Відредагувати</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Видалити акаунт</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id" asp-route-userName="@Model?.Name">Видалити секцію</a>
                     }
                 </div>
             </div>
@@ -63,6 +63,7 @@
                                     <th>
                                         Позиція
                                     </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,6 +78,20 @@
                                         <td>
                                             @item.Position
                                         </td>
+                                        @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility") || User.IsInRole("TeamLeadWorkstation"))
+                                        {
+                                            <td>
+                                                <a class="text-decoration-none" asp-controller="Account" asp-action="Edit" asp-route-id="@item.Id">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--pen-new-square-bold" /></svg>
+                                                </a>
+                                                <a class="text-decoration-none" asp-controller="Account" asp-action="Details" asp-route-id="@item.Id">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--info-circle-bold" /></svg>
+                                                </a>
+                                                <a class="text-decoration-none" asp-controller="Account" asp-action="Delete" asp-route-id="@item.Id">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--trash-bin-minimalistic-linear" /></svg>
+                                                </a>
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>

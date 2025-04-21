@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ManufactureHub.Models
 {
-    public class EditModel
+    public class EditUserModel
     {
         [Key]
         public int Id { get; set; }

@@ -43,11 +43,15 @@ namespace ManufactureHub.Controllers
             }
 
             var workstationViewModel = await _context.Workstations
+                .Include(w => w.Sections)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (workstationViewModel == null)
             {
                 return NotFound();
             }
+
+            ViewBag.TeamLeadUser = await userManager.FindByIdAsync(workstationViewModel.Id.ToString());
 
             return View(workstationViewModel);
         }
@@ -84,7 +88,7 @@ namespace ManufactureHub.Controllers
                 if (!convertResId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id тімліда");
-                    return View();
+                    return View(workstationModelPost);
                 }
 
                 WorkstationViewModel workstationViewModel = new WorkstationViewModel()
@@ -154,7 +158,7 @@ namespace ManufactureHub.Controllers
                 if (!convertResId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id тімліда");
-                    return View();
+                    return View(workstationModelEdit);
                 }
 
                 var workstationViewModel = await _context.Workstations.FirstOrDefaultAsync(s => s.Id == id);
@@ -162,7 +166,7 @@ namespace ManufactureHub.Controllers
                 if (workstationViewModel == null)
                 {
                     ModelState.AddModelError("", "Невдалося знайти цех");
-                    return View();
+                    return View(workstationModelEdit);
                 }
 
                 // Update scalar properties

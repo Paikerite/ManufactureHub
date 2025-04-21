@@ -378,7 +378,7 @@ namespace ManufactureHub.Controllers
             var userRole = await userManager.GetRolesAsync(accountUser);
             var identityRole = await roleManager.FindByNameAsync(userRole[0]);
 
-            EditModel editModel = new EditModel()
+            EditUserModel editModel = new EditUserModel()
             {
                 Id = accountUser.Id,
                 Name = accountUser.Name,
@@ -398,7 +398,7 @@ namespace ManufactureHub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,HeadFacility")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, Name,SurName,PatronymicName,Role,Position")] EditModel editModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Name,SurName,PatronymicName,Role,Position")] EditUserModel editModel)
         {
             if (id != editModel.Id)
             {

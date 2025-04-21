@@ -10,6 +10,9 @@ namespace ManufactureHub.Models
         [MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Необхідне роз'яснення або мета цеху")]
+        [DataType(DataType.MultilineText)]
+        [MinLength(5)]
+        [MaxLength(1024)]
         public string Description { get; set; }
         public int IdTeamLead { get; set; }
 

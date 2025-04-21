@@ -3,12 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using ManufactureHub.Data;
 using ManufactureHub.Models;
 using ManufactureHub.Data.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IO.Compression;
 
 namespace ManufactureHub.Controllers
 {
     public class TaskController : Controller
     {
         private readonly ManufactureHubContext _context;
+
+        private string[] unValidExtensionsForUpload = [".exe", ".msi"];
 
         public TaskController(ManufactureHubContext context)
         {
@@ -18,7 +22,7 @@ namespace ManufactureHub.Controllers
         // GET: TaskViewModels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tasks.ToListAsync());
+            return View(await _context.Tasks.Include(s=>s.Section).ToListAsync());
         }
 
         // GET: TaskViewModels/Details/5
@@ -40,9 +44,18 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: TaskViewModels/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            List<SectionViewModel> sections = await _context.Sections.ToListAsync();
+            List<SelectListItem> sectionsSelect = new List<SelectListItem>();
+            foreach (var section in sections)
+            {
+                sectionsSelect.Add(new SelectListItem { Text = section.Name, Value = section.Id.ToString() });
+            }
+
+            TaskModelPost taskModelPost = new TaskModelPost() { Deadline = DateTime.Now.Date, SectionSelect = sectionsSelect };
+
+            return View(taskModelPost);
         }
 
         // POST: TaskViewModels/Create
@@ -50,18 +63,47 @@ namespace ManufactureHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Deadline,Priority,FileUrl")] TaskViewModel taskViewModel)
+        public async Task<IActionResult> Create([Bind("Name,Description,Deadline,Priority,SectionId,FormFile")] TaskModelPost taskModelPost)
         {
             if (ModelState.IsValid)
             {
-                taskViewModel.Created = DateTime.Now;
-                taskViewModel.StatusTask = StatusTask.underreview;
-                taskViewModel.ProfilePictureUploader = "user.svg";
+                string? pathToImage = string.Empty;
+
+                try
+                {
+                    pathToImage = await UploadFile(taskModelPost.FormFile);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
+                    return View(taskModelPost);
+                }
+
+                var convertResIdId = int.TryParse(taskModelPost.SectionId, out int sectionId);
+                if (!convertResIdId)
+                {
+                    ModelState.AddModelError("", "Помилка при зчитування id цеху");
+                    return View(taskModelPost);
+                }
+
+                TaskViewModel taskViewModel = new TaskViewModel() 
+                {
+                    Name = taskModelPost.Name,
+                    Description = taskModelPost.Description,
+                    Deadline = taskModelPost.Deadline,
+                    Priority = taskModelPost.Priority,
+                    Created = DateTime.Now,
+                    StatusTask = StatusTask.underreview,
+                    SectionId = sectionId,
+                    FileUrl = pathToImage,
+                    //taskViewModel.ProfilePictureUploader = "user.svg";
+                };
+
                 _context.Add(taskViewModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(taskViewModel);
+            return View(taskModelPost);
         }
 
         // GET: TaskViewModels/Edit/5
@@ -146,6 +188,41 @@ namespace ManufactureHub.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<string> UploadFile(IFormFile fileAvatar)
+        {
+            //ImageFiles.Clear(); 
+            // e.GetMultipleFiles(maxAllowedFiles) for several files
+            int maxFileSize = 1024 * 1024 * 50; // 50MB
+            if (fileAvatar.Length >= maxFileSize)
+            {
+                throw new Exception("Файл занадто великого розміру, максимум 50 mb");
+            }
+
+            string extension = Path.GetExtension(fileAvatar.FileName);
+
+            if (unValidExtensionsForUpload.Contains(extension))
+            {
+                throw new Exception($"Данний формат файла не підтримується, не дозволяється також такі: {string.Join(",", unValidExtensionsForUpload)}");
+            }
+
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "TaskFiles");
+
+            string newFileName = Path.ChangeExtension(Path.GetRandomFileName(),
+                                                      extension);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string absolutePath = Path.Combine(path, newFileName);
+            string relativePath = Path.Combine("TaskFiles", newFileName);
+
+            await using FileStream fs = new(absolutePath, FileMode.Create);
+            await fileAvatar.OpenReadStream().CopyToAsync(fs, maxFileSize);
+
+            return relativePath;
         }
 
         private bool TaskViewModelExists(int id)

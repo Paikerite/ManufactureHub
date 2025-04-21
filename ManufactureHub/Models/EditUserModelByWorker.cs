@@ -2,7 +2,7 @@
 
 namespace ManufactureHub.Models
 {
-    public class EditModelByWorker
+    public class EditUserModelByWorker
     {
         [Key]
         public int Id { get; set; }

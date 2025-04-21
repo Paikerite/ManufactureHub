@@ -106,14 +106,14 @@ namespace ManufactureHub.Controllers
                 if (!convertResId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id тімліда");
-                    return View();
+                    return View(sectionModelPost);
                 }
 
                 var convertResIdId = int.TryParse(sectionModelPost.WorkstationId, out int workstationId);
                 if (!convertResIdId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id цеху");
-                    return View();
+                    return View(sectionModelPost);
                 }
 
                 List<ApplicationUser> workers = new List<ApplicationUser>();
@@ -249,14 +249,14 @@ namespace ManufactureHub.Controllers
                 if (!convertResId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id тімліда");
-                    return View();
+                    return View(sectionModelEdit);
                 }
 
                 var convertResIdId = int.TryParse(sectionModelEdit.WorkstationId, out int workstationId);
                 if (!convertResIdId)
                 {
                     ModelState.AddModelError("", "Помилка при зчитування id цеху");
-                    return View();
+                    return View(sectionModelEdit);
                 }
 
                 var sectionViewModel = await _context.Sections

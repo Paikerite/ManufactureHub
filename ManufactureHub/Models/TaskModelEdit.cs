@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ManufactureHub.Models
 {
-    public class TaskViewModel
+    public class TaskModelEdit
     {
         [Key]
         public int Id { get; set; }
@@ -14,9 +14,6 @@ namespace ManufactureHub.Models
         public string Name { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Необхідний опис завдання")]
-        [DataType(DataType.MultilineText)]
-        [MinLength(5)]
-        [MaxLength(1024)]
         public string Description { get; set; }
 
         [DataType(DataType.DateTime)]

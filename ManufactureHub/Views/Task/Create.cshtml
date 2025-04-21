@@ -1,4 +1,4 @@
-﻿@model ManufactureHub.Models.TaskViewModel
+﻿@model ManufactureHub.Models.TaskModelPost
 
 @{
     ViewData["Title"] = "Створити завдання";
@@ -9,7 +9,7 @@
         <div class="card shadow-sm col-md-5 col-lg-6">
             <div class="card-body">
                 <div class="row">
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" enctype="multipart/form-data" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label">Назва завдання</label>
@@ -46,20 +46,15 @@
                                 <span asp-validation-for="Deadline" class="text-danger"></span>
                             </div>
                         </div>
-                        @*                             <div class="mb-3">
-                                @if (selectList.Count() != 0)
-                                {
-                                    <label asp-for="SelectedId" class="form-label">Курси до яких відноситься данний урок</label>
-                                    <div class="row">
-                                        <select name="SelectedId" id="SelectedId" asp-for="SelectedId" asp-items="selectList" class="form-select"></select>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span>Ви не керуєте жодним курсом <a asp-area="" asp-controller="Class" asp-action="Create" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Створити свій курс</a></span>
-                                }
-                                <span asp-validation-for="SelectedId" class="text-danger"></span>
-                            </div> *@
+                        <div class="mb-3">
+                            <label for="formFile" asp-for="FormFile" class="form-label">Завантажити файл пов'язаний с завданням</label>
+                            <input class="form-control" asp-for="FormFile" type="file" id="formFile">
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="SectionId" class="control-label">До якой секції відноситься завдання</label>
+                            <select asp-for="SectionId" class="form-select" asp-items="Model.SectionSelect"></select>
+                            <span asp-validation-for="SectionId" class="text-danger"></span>
+                        </div>
                         <div class="row g-2 mb-3">
                             <div class="col-auto">
                                 <input type="submit" value="Опублікувати" class="btn btn-primary" />
@@ -67,7 +62,7 @@
                             <div class="col-auto">
                                 <a class="link-underline-light align-middle icon-link icon-link-hover" asp-action="Index">
                                     <svg class="bi" aria-hidden="true"><use xlink:href="#solar--alt-arrow-left-line-duotone" /></svg>
-                                    Повернутися до списку завдань
+                                    Повернутися до дашборду завдань
                                 </a>
                             </div>
                         </div>

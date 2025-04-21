@@ -20,7 +20,7 @@ namespace ManufactureHub.Models
         public string TeamLeadId { get; set; }
         public List<SelectListItem> TeamLeadSelect { get; set; } = new List<SelectListItem>();
 
-        [Required(ErrorMessage = "Необхідно обрати тімліда секції")]
+        [Required(ErrorMessage = "Необхідно обрати цех до якого буде прив'язана секція")]
         public string WorkstationId { get; set; }
         public List<SelectListItem> WorkstationsSelect { get; set; } = new List<SelectListItem>();
 
