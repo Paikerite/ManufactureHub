@@ -1,54 +1,55 @@
 ﻿@model ManufactureHub.Models.TaskViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Інформація";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>TaskViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Deadline)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Deadline)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Priority)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Priority)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FileUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FileUrl)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="container">
+    <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="hstack">
+                    <div class="col text-center">
+                        <h2 class="fw-bold">@Model.Name</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    @* col-8 *@
+                    <div class="card-text">
+                        <p>Назва таску: @Model.Name</p>
+                        <p>Опис таску: @Model.Description</p>
+                        <p>Кінцевий срок виконання: @Model.Deadline.ToString("d")</p>
+                        <p>Дата створення: @Model.Created</p>
+                        <p>Пріоритет: @Model.Priority</p>
+                        <p>Статус: @Model.StatusTask.ToString()</p>
+                        <p>Секція виконавців: <a asp-controller="Section" asp-action="Details" asp-route-id="@Model.SectionId">@Model.Section.Name</a></p>
+                        @if (Model.FileUrl != null)
+                        {
+                            <div class="hstack">
+                                <p>Скачати допоміжні файли </p>
+                                <a class="btn btn-warning" asp-action="DownloadFile" asp-route-fileName="@Model.FileUrl" download role="button">Скачати</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col">
+                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                    {
+                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model?.Id">Відредагувати</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model?.Id">Видалити завдання</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,59 +1,103 @@
-﻿@model ManufactureHub.Models.TaskViewModel
+﻿@model ManufactureHub.Models.TaskModelEdit
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редагування завдання";
 }
 
-<h1>Edit</h1>
-
-<h4>TaskViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card shadow-sm col-md-5 col-lg-6">
+            <div class="card-body">
+                <div class="row">
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Назва завдання</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Мета завдання</label>
+                            <textarea type="text" asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <h4 class="mb-3">Пріорітет</h4>
+                                <div class="my-3">
+                                    <div class="form-check">
+                                        <input asp-for="Priority" id="low" name="Priority" type="radio" value="Low" class="form-check-input" />
+                                        <label class="form-check-label" for="low">Низький</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input asp-for="Priority" id="medium" name="Priority" type="radio" value="Medium" checked class="form-check-input" />
+                                        <label class="form-check-label" for="medium">Средній</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input asp-for="Priority" id="high" name="Priority" type="radio" value="High" class="form-check-input" />
+                                        <label class="form-check-label" for="high">Високий</label>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Priority" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="Deadline" class="form-label">Кінцевий срок сдачи</label>
+                                <input asp-for="Deadline" class="form-control" />
+                                <span asp-validation-for="Deadline" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="UploadNewFiles" class="form-check-input" type="checkbox" role="switch" id="switchUploadNewFiles">
+                                <label asp-for="UploadNewFiles" class="form-check-label" for="switchUploadNewFiles">
+                                    Завантажити нові файли для завдання
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" asp-for="FormFile" class="form-label">Завантажити файл пов'язаний с завданням</label>
+                            <input class="form-control" asp-for="FormFile" type="file" id="formFile">
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="SectionId" class="control-label">До якой секції відноситься завдання</label>
+                            <select asp-for="SectionId" class="form-select" asp-items="Model.SectionSelect"></select>
+                            <span asp-validation-for="SectionId" class="text-danger"></span>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-auto">
+                                <input type="submit" value="Опублікувати" class="btn btn-primary" />
+                            </div>
+                            <div class="col-auto">
+                                <a class="link-underline-light align-middle icon-link icon-link-hover" asp-action="Index">
+                                    <svg class="bi" aria-hidden="true"><use xlink:href="#solar--alt-arrow-left-line-duotone" /></svg>
+                                    Повернутися до дашборду завдань
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control" />
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <select asp-for="Priority" class="form-control"></select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FileUrl" class="control-label"></label>
-                <input asp-for="FileUrl" class="form-control" />
-                <span asp-validation-for="FileUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkbox = document.getElementById("switchUploadNewFiles");
+            const fileUpload = document.getElementById("formFile");
+
+            function toggleFileUpload() {
+                fileUpload.disabled = !checkbox.checked;
+            }
+
+            // Initial check
+            toggleFileUpload();
+
+            // Event listener for checkbox change
+            checkbox.addEventListener("change", toggleFileUpload);
+        });
+    </script>
 }

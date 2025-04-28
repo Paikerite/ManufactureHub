@@ -4,7 +4,7 @@ using ManufactureHub.Data;
 using ManufactureHub.Models;
 using ManufactureHub.Data.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.IO.Compression;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ManufactureHub.Controllers
 {
@@ -22,10 +22,11 @@ namespace ManufactureHub.Controllers
         // GET: TaskViewModels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tasks.Include(s=>s.Section).ToListAsync());
+            return View(await _context.Tasks.Include(s => s.Section).ToListAsync());
         }
 
         // GET: TaskViewModels/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,6 +35,7 @@ namespace ManufactureHub.Controllers
             }
 
             var taskViewModel = await _context.Tasks
+                .Include(s => s.Section)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (taskViewModel == null)
             {
@@ -44,6 +46,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: TaskViewModels/Create
+        [Authorize(Roles = "Admin,TeamLeadWorkstation")]
         public async Task<IActionResult> Create()
         {
             List<SectionViewModel> sections = await _context.Sections.ToListAsync();
@@ -63,15 +66,16 @@ namespace ManufactureHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,TeamLeadWorkstation")]
         public async Task<IActionResult> Create([Bind("Name,Description,Deadline,Priority,SectionId,FormFile")] TaskModelPost taskModelPost)
         {
             if (ModelState.IsValid)
             {
-                string? pathToImage = string.Empty;
+                string? pathToFiles = string.Empty;
 
                 try
                 {
-                    pathToImage = await UploadFile(taskModelPost.FormFile);
+                    pathToFiles = await UploadFile(taskModelPost.FormFile);
                 }
                 catch (Exception ex)
                 {
@@ -86,7 +90,7 @@ namespace ManufactureHub.Controllers
                     return View(taskModelPost);
                 }
 
-                TaskViewModel taskViewModel = new TaskViewModel() 
+                TaskViewModel taskViewModel = new TaskViewModel()
                 {
                     Name = taskModelPost.Name,
                     Description = taskModelPost.Description,
@@ -95,7 +99,7 @@ namespace ManufactureHub.Controllers
                     Created = DateTime.Now,
                     StatusTask = StatusTask.underreview,
                     SectionId = sectionId,
-                    FileUrl = pathToImage,
+                    FileUrl = pathToFiles,
                     //taskViewModel.ProfilePictureUploader = "user.svg";
                 };
 
@@ -107,6 +111,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: TaskViewModels/Edit/5
+        [Authorize(Roles = "Admin,TeamLeadWorkstation")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,7 +124,28 @@ namespace ManufactureHub.Controllers
             {
                 return NotFound();
             }
-            return View(taskViewModel);
+
+            List<SectionViewModel> sections = await _context.Sections.ToListAsync();
+            List<SelectListItem> sectionsSelect = new List<SelectListItem>();
+            foreach (var section in sections)
+            {
+                sectionsSelect.Add(new SelectListItem { Text = section.Name, Value = section.Id.ToString() });
+            }
+
+            TaskModelEdit taskModelEdit = new TaskModelEdit()
+            {
+                Id = taskViewModel.Id,
+                Name = taskViewModel.Name,
+                Description = taskViewModel.Description,
+                Deadline = taskViewModel.Deadline,
+                Created = taskViewModel.Created,
+                Priority = taskViewModel.Priority,
+                UploadNewFiles = false,
+                SectionId = taskViewModel.SectionId.ToString(),
+                SectionSelect = sectionsSelect
+            };
+
+            return View(taskModelEdit);
         }
 
         // POST: TaskViewModels/Edit/5
@@ -127,18 +153,74 @@ namespace ManufactureHub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Deadline,Created,Priority,FileUrl,StatusTask")] TaskViewModel taskViewModel)
+        [Authorize(Roles = "Admin,TeamLeadWorkstation")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Deadline,Priority,SectionId,UploadNewFiles,FormFile")] TaskModelEdit taskModelEdit)
         {
-            if (id != taskViewModel.Id)
+            if (id != taskModelEdit.Id)
             {
                 return NotFound();
             }
 
+            if (!taskModelEdit.UploadNewFiles)
+            {
+                ModelState.Remove("FormFile");
+            }
+
             if (ModelState.IsValid)
             {
+                var taskViewModel = await _context.Tasks.FirstOrDefaultAsync(lol => lol.Id == id);
+
+                if (taskViewModel == null)
+                {
+                    ModelState.AddModelError("", "Невдалося знайти таск");
+                    return View();
+                }
+
+                string? pathToFiles = string.Empty;
+
                 try
                 {
-                    _context.Update(taskViewModel);
+                    if (taskModelEdit.UploadNewFiles)
+                    {
+                        pathToFiles = await UploadFile(taskModelEdit.FormFile);
+                        if (taskViewModel.FileUrl != null)
+                        {
+                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", taskViewModel.FileUrl);
+                            if (System.IO.File.Exists(path))
+                            {
+                                System.IO.File.Delete(path);
+                                Thread.Sleep(20);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        pathToFiles = taskViewModel.FileUrl;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
+                    return View(taskModelEdit);
+                }
+
+                var convertResIdId = int.TryParse(taskModelEdit.SectionId, out int sectionId);
+                if (!convertResIdId)
+                {
+                    ModelState.AddModelError("", "Помилка при зчитування id цеху");
+                    return View(taskModelEdit);
+                }
+
+                taskViewModel.Name = taskModelEdit.Name;
+                taskViewModel.Description = taskModelEdit.Description;
+                taskViewModel.Priority = taskModelEdit.Priority;
+                taskViewModel.Deadline = taskModelEdit.Deadline;
+                taskViewModel.SectionId = sectionId;
+                taskViewModel.FileUrl = pathToFiles;
+
+                try
+                {
+                    //_context.Update(taskViewModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -147,17 +229,22 @@ namespace ManufactureHub.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
+                }
+                catch (DbUpdateException ex)
+                {
+                    // Log the exception for debugging
+                    Console.WriteLine(ex.InnerException?.Message);
+                    ModelState.AddModelError("", "Помилка при збереженні змін. Спробуйте ще раз.");
+                    return View(taskModelEdit);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(taskViewModel);
+            return View(taskModelEdit);
         }
 
         // GET: TaskViewModels/Delete/5
+        [Authorize(Roles = "Admin,TeamLeadWorkstation")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -178,16 +265,55 @@ namespace ManufactureHub.Controllers
         // POST: TaskViewModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,TeamLeadWorkstation")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var taskViewModel = await _context.Tasks.FindAsync(id);
             if (taskViewModel != null)
             {
                 _context.Tasks.Remove(taskViewModel);
+                if (taskViewModel.FileUrl != null)
+                {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", taskViewModel.FileUrl);
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                        Thread.Sleep(20);
+                    }
+                }
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult DownloadFile([FromQuery]string fileName)
+        {
+            if (fileName.Contains("..") || fileName.Contains('/'))
+            {
+                return BadRequest("Invalid file name.");
+            }
+            // Path to the file on the server
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("File not found.");
+            }
+
+            // Read the file as a byte array
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            // Set the content type (MIME type) based on the file extension
+            string contentType = "application/octet-stream"; // Default for unknown types
+            if (fileName.EndsWith(".pdf"))
+                contentType = "application/pdf";
+            else if (fileName.EndsWith(".jpg"))
+                contentType = "image/jpeg";
+            // Add more MIME types as needed
+
+            // Return the file with the appropriate headers
+            return File(fileBytes, contentType, fileName);
         }
 
         public async Task<string> UploadFile(IFormFile fileAvatar)

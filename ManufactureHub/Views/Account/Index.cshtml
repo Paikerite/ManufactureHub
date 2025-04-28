@@ -79,7 +79,7 @@
                                     @Html.DisplayFor(modelItem => item.Position)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.EmploymentDate.Date)
+                                    @item.EmploymentDate.Date.ToString("d")
                                 </td>
                                 <td>
                                     @(string.Join(", ", ViewBag.UserRoles[item.Id] as IList<string> ?? new List<string>()))

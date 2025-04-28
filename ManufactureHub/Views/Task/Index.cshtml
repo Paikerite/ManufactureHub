@@ -8,113 +8,232 @@
 <div class="container-fluid board-container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Дашборд завдань</h2>
-        <a asp-action="Create" class="btn btn-primary">Створити</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+        {
+            <a asp-action="Create" class="btn btn-primary">Створити</a>
+        }
     </div>
 
     <div class="d-flex flex-nowrap overflow-auto" id="taskBoard">
         <!-- IN PROGRESS Column -->
         <div class="board-column flex-shrink-0 w-25 status-in-progress drop-target" data-status="in-progress">
-            <h5>IN PROGRESS <span class="badge bg-secondary">1</span></h5>
+            <h5>В процесі <span class="badge bg-secondary">1</span></h5>
             @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.inprogress))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="in-progress">
-                    <p>@task.Name</p>
-                    <span class="text-muted">@task.Created</span>
-                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
-                    <span>@task.Section.Name</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            @task.Name
+                        </h6>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="btn-group dropstart">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@task.Id">Редагувати</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@task.Id">Деталі</a></li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@task.Id">Видалити</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            @{
+                                var daysDiff = (task.Deadline - DateTime.Now).Days;
+                                if (daysDiff < 0)
+                                {
+                                    <span>@Math.Abs(daysDiff) день/днів тому</span>
+                                }
+                                else
+                                {
+                                    <span>Через @daysDiff день/днів</span>
+                                }
+                            }
+                        </small>
+                        <span class="badge @GetPriorityClass(task.Priority)">
+                            @task.Priority
+                        </span>
+                    </div>
                 </div>
             }
-            <div class="task-card" data-task-id="task1" data-status="in-progress">
-                <p>Feature deployment runbook</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>CM-3</span>
-            </div>
         </div>
 
         <!-- UNDER REVIEW Column -->
         <div class="board-column flex-shrink-0 w-25 status-under-review drop-target" data-status="under-review">
-            <h5>UNDER REVIEW <span class="badge bg-secondary">3</span></h5>
+            <h5>Під розглядом <span class="badge bg-secondary">3</span></h5>
             @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.underreview))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="under-review">
-                    <p>@task.Name</p>
-                    <span class="text-muted">@task.Created.Date</span>
-                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
-                    <span>@task.Section.Name</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            @task.Name
+                        </h6>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="btn-group dropstart">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@task.Id">Редагувати</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@task.Id">Деталі</a></li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@task.Id">Видалити</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            @{
+                                var daysDiff = (task.Deadline - DateTime.Now).Days;
+                                if (daysDiff < 0)
+                                {
+                                    <span>@Math.Abs(daysDiff) день/днів тому</span>
+                                }
+                                else
+                                {
+                                    <span>Через @daysDiff день/днів</span>
+                                }
+                            }
+                        </small>
+                        <span class="badge @GetPriorityClass(task.Priority)">
+                            @task.Priority
+                        </span>
+                    </div>
                 </div>
             }
-            <div class="task-card" data-task-id="task2" data-status="under-review">
-                <p>Customer onboarding</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-6</span>
-            </div>
-            <div class="task-card" data-task-id="task3" data-status="under-review">
-                <p>Employee onboarding</p>
-                <span class="text-muted">Mar 12</span>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-18</span>
-            </div>
-            <div class="task-card" data-task-id="task4" data-status="under-review">
-                <p>Employee payroll</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-7</span>
-            </div>
         </div>
 
         <!-- DONE Column -->
         <div class="board-column flex-shrink-0 w-25 status-done drop-target" data-status="done">
-            <h5>DONE <span class="badge bg-secondary">3</span></h5>
+            <h5>Виконано <span class="badge bg-secondary">3</span></h5>
             @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.done))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="done">
-                    <p>@task.Name</p>
-                    <span class="text-muted">@task.Created</span>
-                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
-                    <span>@task.Section.Name</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            @task.Name
+                        </h6>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="btn-group dropstart">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@task.Id">Редагувати</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@task.Id">Деталі</a></li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@task.Id">Видалити</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            @{
+                                var daysDiff = (task.Deadline - DateTime.Now).Days;
+                                if (daysDiff < 0)
+                                {
+                                    <span>@Math.Abs(daysDiff) день/днів тому</span>
+                                }
+                                else
+                                {
+                                    <span>Через @daysDiff день/днів</span>
+                                }
+                            }
+                        </small>
+                        <span class="badge @GetPriorityClass(task.Priority)">
+                            @task.Priority
+                        </span>
+                    </div>
                 </div>
             }
-            <div class="task-card" data-task-id="task5" data-status="done">
-                <p>IT security check process</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-1</span>
-            </div>
-            <div class="task-card" data-task-id="task6" data-status="done">
-                <p>Candidate recruitment</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-6</span>
-            </div>
-            <div class="task-card" data-task-id="task7" data-status="done">
-                <p>Digital partnerships</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-17</span>
-            </div>
         </div>
 
         <!-- REJECTED Column -->
         <div class="board-column flex-shrink-0 w-25 status-rejected drop-target" data-status="rejected">
-            <h5>REJECTED <span class="badge bg-secondary">2</span></h5>
+            <h5>Відмовлено <span class="badge bg-secondary">2</span></h5>
             @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.rejected))
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="rejected">
-                    <p>@task.Name</p>
-                    <span class="text-muted">@task.Created</span>
-                    <img src="@task.ProfilePictureUploader" alt="Assignee" class="avatar">
-                    <span>@task.Section.Name</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            @task.Name
+                        </h6>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="btn-group dropstart">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@task.Id">Редагувати</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@task.Id">Деталі</a></li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
+                                    {
+                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@task.Id">Видалити</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            @{
+                                var daysDiff = (task.Deadline - DateTime.Now).Days;
+                                if (daysDiff < 0)
+                                {
+                                    <span>@Math.Abs(daysDiff) день/днів тому</span>
+                                }
+                                else
+                                {
+                                    <span>Через @daysDiff день/днів</span>
+                                }
+                            }
+                        </small>
+                        <span class="badge @GetPriorityClass(task.Priority)">
+                            @task.Priority
+                        </span>
+                    </div>
                 </div>
             }
-            <div class="task-card" data-task-id="task8" data-status="rejected">
-                <p>PR launch runbook</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-1</span>
-            </div>
-            <div class="task-card" data-task-id="task9" data-status="rejected">
-                <p>Website deployments</p>
-                <img src="https://via.placeholder.com/30" alt="Assignee" class="avatar">
-                <span>PC-6</span>
-            </div>
         </div>
     </div>
 </div>
+
+@functions {
+    string GetPriorityClass(Priority priority)
+    {
+        return priority switch
+        {
+            Priority.Low => "bg-success",
+            Priority.Medium => "bg-warning",
+            Priority.High => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}
 
 @section Scripts {
     <script>
