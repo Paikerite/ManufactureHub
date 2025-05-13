@@ -22,6 +22,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: Section
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Sections
@@ -31,6 +32,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: Section/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

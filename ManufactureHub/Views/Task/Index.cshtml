@@ -17,8 +17,15 @@
     <div class="d-flex flex-nowrap overflow-auto" id="taskBoard">
         <!-- IN PROGRESS Column -->
         <div class="board-column flex-shrink-0 w-25 status-in-progress drop-target" data-status="in-progress">
-            <h5>В процесі <span class="badge bg-secondary">1</span></h5>
-            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.inprogress))
+            @{
+                IEnumerable<TaskViewModel> tasksInProgress = Enumerable.Empty<TaskViewModel>();
+                if (Model != null)
+                {
+                    tasksInProgress = Model.Where(t => t.StatusTask == StatusTask.inprogress);
+                }
+            }
+            <h5>В процесі <span class="badge bg-secondary">@tasksInProgress.Count()</span></h5>
+            @foreach (var task in tasksInProgress)
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="in-progress">
                     <div class="d-flex justify-content-between align-items-center">
@@ -68,8 +75,15 @@
 
         <!-- UNDER REVIEW Column -->
         <div class="board-column flex-shrink-0 w-25 status-under-review drop-target" data-status="under-review">
-            <h5>Під розглядом <span class="badge bg-secondary">3</span></h5>
-            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.underreview))
+            @{
+                IEnumerable<TaskViewModel> tasksUnderreview = Enumerable.Empty<TaskViewModel>();
+                if (Model != null)
+                {
+                    tasksUnderreview = Model.Where(t => t.StatusTask == StatusTask.underreview);
+                }
+            }
+            <h5>Під розглядом <span class="badge bg-secondary">@tasksUnderreview.Count()</span></h5>
+            @foreach (var task in tasksUnderreview)
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="under-review">
                     <div class="d-flex justify-content-between align-items-center">
@@ -80,7 +94,6 @@
                         {
                             <div class="btn-group dropstart">
                                 <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadWorkstation"))
@@ -120,8 +133,15 @@
 
         <!-- DONE Column -->
         <div class="board-column flex-shrink-0 w-25 status-done drop-target" data-status="done">
-            <h5>Виконано <span class="badge bg-secondary">3</span></h5>
-            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.done))
+            @{
+                IEnumerable<TaskViewModel> tasksDone = Enumerable.Empty<TaskViewModel>();
+                if (Model != null)
+                {
+                    tasksDone = Model.Where(t => t.StatusTask == StatusTask.done);
+                }
+            }
+            <h5>Виконано <span class="badge bg-secondary">@tasksDone.Count()</span></h5>
+            @foreach (var task in tasksDone)
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="done">
                     <div class="d-flex justify-content-between align-items-center">
@@ -171,8 +191,15 @@
 
         <!-- REJECTED Column -->
         <div class="board-column flex-shrink-0 w-25 status-rejected drop-target" data-status="rejected">
-            <h5>Відмовлено <span class="badge bg-secondary">2</span></h5>
-            @foreach (var task in Model.Where(t => t.StatusTask == StatusTask.rejected))
+            @{
+                IEnumerable<TaskViewModel> tasksRejected = Enumerable.Empty<TaskViewModel>();
+                if (Model != null)
+                {
+                    tasksRejected = Model.Where(t => t.StatusTask == StatusTask.rejected);
+                }
+            }
+            <h5>Відмовлено <span class="badge bg-secondary">@tasksRejected.Count()</span></h5>
+            @foreach (var task in tasksRejected)
             {
                 <div class="task-card" data-task-id="@task.Id" data-status="rejected">
                     <div class="d-flex justify-content-between align-items-center">
@@ -238,32 +265,37 @@
 @section Scripts {
     <script>
         // Initialize Interact.js for drag-and-drop
-        interact('.task-card')
-            .draggable({
-                inertia: true, // Add inertia for smoother dragging
-                modifiers: [
-                    interact.modifiers.restrictRect({
-                        restriction: '#taskBoard', // Restrict movement within the task board
-                        endOnly: true
-                    })
-                ],
-                autoScroll: true, // Enable auto-scrolling when dragging near the edge
-                onmove: dragMoveListener,
-                onend: dragEndListener
-            });
+        @if (User.IsInRole("Admin") || User.IsInRole("TeamLeadSection"))
+        {
+            <text>
+                interact('.task-card')
+                    .draggable({
+                        inertia: true, // Add inertia for smoother dragging
+                        modifiers: [
+                            interact.modifiers.restrictRect({
+                                restriction: '#taskBoard', // Restrict movement within the task board
+                                endOnly: true
+                            })
+                        ],
+                        autoScroll: true, // Enable auto-scrolling when dragging near the edge
+                        onmove: dragMoveListener,
+                        onend: dragEndListener
+                    });
 
-        interact('.drop-target')
-            .dropzone({
-                accept: '.task-card',
-                overlap: 0.1, // Lower overlap requirement for easier dropping
-                ondrop: dropHandler,
-                ondragenter: function(event) {
-                    event.target.classList.add('drop-hover'); // Visual feedback for drop zone
-                },
-                ondragleave: function(event) {
-                    event.target.classList.remove('drop-hover'); // Remove hover effect when leaving
-                }
-            });
+                interact('.drop-target')
+                    .dropzone({
+                        accept: '.task-card',
+                        overlap: 0.1, // Lower overlap requirement for easier dropping
+                        ondrop: dropHandler,
+                        ondragenter: function(event) {
+                            event.target.classList.add('drop-hover'); // Visual feedback for drop zone
+                        },
+                        ondragleave: function(event) {
+                            event.target.classList.remove('drop-hover'); // Remove hover effect when leaving
+                        }
+                    });
+            </text>
+        }
 
         function dragMoveListener(event) {
             const target = event.target;
@@ -294,6 +326,7 @@
             const dropZone = event.target.closest('.drop-target'); // Ensure we get the column, not a child element
 
             if (!dropZone) return; // Safety check
+            const originalStatus = draggedElement.dataset.status;
 
             // Move the task to the drop zone
             dropZone.appendChild(draggedElement);
@@ -313,7 +346,14 @@
             dropZone.classList.remove('drop-hover');
 
             //console.log(`Task ${taskId} moved to ${newStatus}`); // Debug log
-            updateTaskStatus(taskId, newStatus);
+            updateTaskStatus(taskId, newStatus, () => {
+            // On failure callback: Revert to original column
+                const originalColumn = document.querySelector(`.drop-target[data-status="${originalStatus}"]`);
+                if (originalColumn) {
+                    originalColumn.appendChild(draggedElement);
+                    updateTaskVisualStatus(draggedElement, originalStatus);
+                }
+            });
         }
 
         // Function to update the visual status of the task card
@@ -335,22 +375,52 @@
             //     case 'rejected':
             //         taskElement.classList.add('status-rejected');
             //         break;
-            //}
+            // }
         }
 
         // Simulate updating task status on the server (replace with actual API call)
-        function updateTaskStatus(taskId, newStatus) {
-            console.log(`Task ${taskId} moved to ${newStatus}`);
-            /*
-            fetch('/api/tasks/update', {
+        function updateTaskStatus(taskId, newStatus, onError) {
+            const formData = new FormData();
+            formData.append('taskId', parseInt(taskId));
+            formData.append('status', newStatus);
+
+            fetch('/Task/UpdateTaskStatus', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ taskId: taskId, status: newStatus })
+                body: formData
             })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-            */
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        throw new Error('Unauthorized: You do not have permission to update task status');
+                    }
+                    if (contentType && contentType.includes('application/json')) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+                        });
+                    } else {
+                        return response.text().then(text => {
+                            throw new Error(`Non-JSON response: ${text || 'Unknown error'} (Status: ${response.status})`);
+                        });
+                    }
+                }
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Response is not JSON');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('Success:', data.message);
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                alert(`Failed to update task status: ${error.message}`);
+                if (onError) onError();
+            });
         }
     </script>
 }

@@ -37,6 +37,7 @@ namespace ManufactureHub.Controllers
         }
 
         //GET: User
+        [Authorize(Roles = "Admin,HeadFacility")]
         public async Task<IActionResult> Index()
         {
             if (userManager.Users != null)

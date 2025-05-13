@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufactureHub", "ManufactureHub\ManufactureHub.csproj", "{9D099D0C-8263-4E7F-A87F-7818C1F9EAFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManufactureHub.Test", "ManufactureHub.Test\ManufactureHub.Test.csproj", "{D4AFF641-63BA-444A-98E8-9118CF4BE742}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D099D0C-8263-4E7F-A87F-7818C1F9EAFC} = {9D099D0C-8263-4E7F-A87F-7818C1F9EAFC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +20,15 @@ Global
 		{9D099D0C-8263-4E7F-A87F-7818C1F9EAFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D099D0C-8263-4E7F-A87F-7818C1F9EAFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D099D0C-8263-4E7F-A87F-7818C1F9EAFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4AFF641-63BA-444A-98E8-9118CF4BE742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4AFF641-63BA-444A-98E8-9118CF4BE742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4AFF641-63BA-444A-98E8-9118CF4BE742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4AFF641-63BA-444A-98E8-9118CF4BE742}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E22EB5F1-91D0-4AEB-AA5E-23EF89FB7DF1}
 	EndGlobalSection
 EndGlobal

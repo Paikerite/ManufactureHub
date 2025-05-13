@@ -21,7 +21,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: Workstation
-        [Authorize(Roles = "Admin,HeadFacility")]
+        [Authorize(Roles = "Admin,HeadFacility,TeamLeadWorkstation")]
         public async Task<IActionResult> Index()
         {
             var workstations = await _context.Workstations
@@ -34,7 +34,7 @@ namespace ManufactureHub.Controllers
         }
 
         // GET: Workstation/Details/5
-        [Authorize(Roles = "Admin,HeadFacility")]
+        [Authorize(Roles = "Admin,HeadFacility,TeamLeadWorkstation")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

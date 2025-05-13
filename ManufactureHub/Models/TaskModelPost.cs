@@ -25,7 +25,7 @@ namespace ManufactureHub.Models
         public Priority Priority { get; set; }
 
         [Display(Name = "File")]
-        public IFormFile FormFile { get; set; }
+        public IFormFile? FormFile { get; set; }
 
         [Required(ErrorMessage = "Необхідно обрати тімліда секції")]
         public string SectionId { get; set; }

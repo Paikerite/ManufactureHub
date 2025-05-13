@@ -5,24 +5,61 @@ using ManufactureHub.Models;
 using ManufactureHub.Data.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace ManufactureHub.Controllers
 {
     public class TaskController : Controller
     {
         private readonly ManufactureHubContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         private string[] unValidExtensionsForUpload = [".exe", ".msi"];
 
-        public TaskController(ManufactureHubContext context)
+        public TaskController(ManufactureHubContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: TaskViewModels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tasks.Include(s => s.Section).ToListAsync());
+            if (User.Identity == null)
+            {
+                return View();
+            }
+
+            var userName = User.Identity.Name;
+
+            if (!User.Identity.IsAuthenticated || userName == null)
+            {
+                return View();
+            }
+            var resUser = await _userManager.Users
+                .Include(s => s.Sections)
+                .ThenInclude(t => t.Tasks)
+                .FirstOrDefaultAsync(nm => nm.UserName == userName);
+
+            if (resUser == null)
+            {
+                return BadRequest();
+            }
+
+            //return View(await _context.Tasks.Include(s => s.Section).ToListAsync());
+            var checkAdminRoleInUser = await _userManager.GetRolesAsync(resUser);
+            if (checkAdminRoleInUser.Contains(Roles.Admin.ToString()) || 
+                checkAdminRoleInUser.Contains(Roles.TeamLeadWorkstation.ToString()) ||
+                checkAdminRoleInUser.Contains(Roles.HeadFacility.ToString()))
+            {
+                return View(await _context.Tasks.Include(s => s.Section).ToListAsync());
+            }
+            var tasksToShow = (from section in resUser.Sections
+                               from task in section.Tasks
+                               select task).ToList();
+
+            return View(tasksToShow);
         }
 
         // GET: TaskViewModels/Details/5
@@ -69,18 +106,22 @@ namespace ManufactureHub.Controllers
         [Authorize(Roles = "Admin,TeamLeadWorkstation")]
         public async Task<IActionResult> Create([Bind("Name,Description,Deadline,Priority,SectionId,FormFile")] TaskModelPost taskModelPost)
         {
+            ModelState.Remove("FormFile");
             if (ModelState.IsValid)
             {
                 string? pathToFiles = string.Empty;
 
-                try
+                if (taskModelPost.FormFile != null)
                 {
-                    pathToFiles = await UploadFile(taskModelPost.FormFile);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
-                    return View(taskModelPost);
+                    try
+                    {
+                        pathToFiles = await UploadFile(taskModelPost.FormFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
+                        return View(taskModelPost);
+                    }
                 }
 
                 var convertResIdId = int.TryParse(taskModelPost.SectionId, out int sectionId);
@@ -178,30 +219,33 @@ namespace ManufactureHub.Controllers
 
                 string? pathToFiles = string.Empty;
 
-                try
+                if (taskModelEdit.FormFile != null)
                 {
-                    if (taskModelEdit.UploadNewFiles)
+                    try
                     {
-                        pathToFiles = await UploadFile(taskModelEdit.FormFile);
-                        if (taskViewModel.FileUrl != null)
+                        if (taskModelEdit.UploadNewFiles)
                         {
-                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", taskViewModel.FileUrl);
-                            if (System.IO.File.Exists(path))
+                            pathToFiles = await UploadFile(taskModelEdit.FormFile);
+                            if (taskViewModel.FileUrl != null)
                             {
-                                System.IO.File.Delete(path);
-                                Thread.Sleep(20);
+                                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", taskViewModel.FileUrl);
+                                if (System.IO.File.Exists(path))
+                                {
+                                    System.IO.File.Delete(path);
+                                    Thread.Sleep(20);
+                                }
                             }
                         }
+                        else
+                        {
+                            pathToFiles = taskViewModel.FileUrl;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        pathToFiles = taskViewModel.FileUrl;
+                        ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
+                        return View(taskModelEdit);
                     }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Помилка на сервері - {ex.Message}");
-                    return View(taskModelEdit);
                 }
 
                 var convertResIdId = int.TryParse(taskModelEdit.SectionId, out int sectionId);
@@ -241,6 +285,54 @@ namespace ManufactureHub.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(taskModelEdit);
+        }
+        
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return Json(new { message = "TaskController is reachable" });
+        }
+
+        /* [ValidateAntiForgeryToken]*/ // Require CSRF token for POST
+        [HttpPost]
+        [Authorize(Roles = "Admin,TeamLeadSection")]
+        public async Task<IActionResult> UpdateTaskStatus(int taskId, string status)
+        {
+            if (string.IsNullOrEmpty(status))
+            {
+                return Json(new { success = false, error = "Invalid input" });
+            }
+
+            // Map hyphenated status values to enum values
+            string mappedStatus = status switch
+            {
+                "in-progress" => "inprogress",
+                "under-review" => "underreview",
+                "done" => "done",
+                "rejected" => "rejected",
+                _ => status // Fallback to original value if no mapping
+            };
+
+            if (!Enum.TryParse<StatusTask>(mappedStatus, true, out var statusTask))
+            {
+                return Json(new { success = false, error = $"Invalid status value: {status}" });
+            }
+
+            var task = await _context.Tasks.FindAsync(taskId);
+            if (task == null)
+            {
+                return Json(new { success = false, error = "Task not found" });
+            }
+
+            if (!User.IsInRole("Admin") && !User.IsInRole("TeamLeadSection"))
+            {
+                return Json(new { success = false, error = "Unauthorized" });
+            }
+
+            task.StatusTask = statusTask;
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Task status updated successfully" });
         }
 
         // GET: TaskViewModels/Delete/5
@@ -287,7 +379,7 @@ namespace ManufactureHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult DownloadFile([FromQuery]string fileName)
+        public IActionResult DownloadFile([FromQuery] string fileName)
         {
             if (fileName.Contains("..") || fileName.Contains('/'))
             {
