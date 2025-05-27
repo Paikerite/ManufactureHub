@@ -25,7 +25,7 @@ namespace ManufactureHub.Models
         public List<SelectListItem> WorkstationsSelect { get; set; } = new List<SelectListItem>();
 
         //[Required(ErrorMessage = "Необхідно обрати робітників до секції")]
-        public IEnumerable<string> UsersWorkersId { get; set; }
+        public IEnumerable<string>? UsersWorkersId { get; set; }
         public List<SelectListItem> UsersWorkersSelect { get; set; } = new List<SelectListItem>();
     }
 }

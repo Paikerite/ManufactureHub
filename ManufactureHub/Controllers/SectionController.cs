@@ -25,10 +25,58 @@ namespace ManufactureHub.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Sections
-                .Include(i => i.Tasks)
-                .Include(b => b.Users)
-                .ToListAsync());
+            if (User.Identity == null)
+            {
+                return View();
+            }
+
+            var userName = User.Identity.Name;
+
+            if (!User.Identity.IsAuthenticated || userName == null)
+            {
+                return View();
+            }
+
+            var resUser = await userManager.Users
+                .Include(i => i.Sections)
+                    .ThenInclude(u => u.Users)
+                .Include(i => i.Sections)
+                    .ThenInclude(t => t.Tasks)
+                .FirstOrDefaultAsync(nm => nm.UserName == userName);
+
+
+            if (resUser == null)
+            {
+                return BadRequest();
+            }
+
+            var checkAdminRoleInUser = await userManager.GetRolesAsync(resUser);
+            if (checkAdminRoleInUser.Contains(Roles.TeamLeadWorkstation.ToString()))
+            {
+                return View(await _context.Sections
+                    .Include(i => i.Tasks)
+                    .Include(b => b.Users)
+                    .Include(w => w.Workstation)
+                    .Where(u=>u.Workstation.IdTeamLead == resUser.Id)
+                    .ToListAsync());
+            }
+
+            if (checkAdminRoleInUser.Contains(Roles.Admin.ToString()) ||
+                checkAdminRoleInUser.Contains(Roles.HeadFacility.ToString()))
+            {
+                return View(await _context.Sections
+                    .Include(i => i.Tasks)
+                    .Include(b => b.Users)
+                    .ToListAsync());
+            }
+            var sectionsToShow = resUser.Sections;
+
+            return View(sectionsToShow);
+
+            //return View(await _context.Sections
+            //    .Include(i => i.Tasks)
+            //    .Include(b => b.Users)
+            //    .ToListAsync());
         }
 
         // GET: Section/Details/5

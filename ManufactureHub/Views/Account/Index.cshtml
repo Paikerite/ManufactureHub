@@ -15,7 +15,7 @@
                     <label class="mb-2">Пошук</label>
                     <form id="searchinput" method="post" asp-controller="Account" asp-action="SearchUser">
                         <div class="input-group">
-                            <input class="form-control" type="text" name="searchinput" placeholder="Пошук" />
+                            <input class="form-control" type="text" name="searchinput" placeholder="Пошук" value="@ViewBag.SearchInput" />
                             <button type="submit" class="btn btn-outline-secondary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--magnifer-linear" /></svg>
                             </button>
@@ -64,41 +64,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @if (Model.Any())
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Id)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SurName)
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                    @Html.DisplayFor(modelItem => item.PatronymicName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Position)
-                                </td>
-                                <td>
-                                    @item.EmploymentDate.Date.ToString("d")
-                                </td>
-                                <td>
-                                    @(string.Join(", ", ViewBag.UserRoles[item.Id] as IList<string> ?? new List<string>()))
-                                </td>
-                                @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
-                                {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
                                     <td>
-                                        <a class="text-decoration-none" asp-action="Edit" asp-route-id="@item.Id">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--pen-new-square-bold" /></svg>
-                                        </a>
-                                        <a class="text-decoration-none" asp-action="Details" asp-route-id="@item.Id">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--info-circle-bold" /></svg>
-                                        </a>
-                                        <a class="text-decoration-none" asp-action="Delete" asp-route-id="@item.Id">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--trash-bin-minimalistic-linear" /></svg>
-                                        </a>
+                                        @Html.DisplayFor(modelItem => item.Id)
                                     </td>
-                                }
-                            </tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SurName)
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                        @Html.DisplayFor(modelItem => item.PatronymicName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Position)
+                                    </td>
+                                    <td>
+                                        @item.EmploymentDate.Date.ToString("d")
+                                    </td>
+                                    <td>
+                                        @(string.Join(", ", ViewBag.UserRoles[item.Id] as IList<string> ?? new List<string>()))
+                                    </td>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("HeadFacility"))
+                                    {
+                                        <td>
+                                            <a class="text-decoration-none" asp-action="Edit" asp-route-id="@item.Id">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--pen-new-square-bold" /></svg>
+                                            </a>
+                                            <a class="text-decoration-none" asp-action="Details" asp-route-id="@item.Id">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--info-circle-bold" /></svg>
+                                            </a>
+                                            <a class="text-decoration-none" asp-action="Delete" asp-route-id="@item.Id">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><use href="#solar--trash-bin-minimalistic-linear" /></svg>
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <p>Користувачів не знайдено.</p>
                         }
                     </tbody>
                 </table>

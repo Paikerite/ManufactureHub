@@ -26,10 +26,21 @@
                     <img class="img-fluid" src="~/@Model.ProfilePicture"/>
                 </div>
                 <div class="col-8">
-                    <div class="card-text">
-                        <p>ПІБ: @Model.Name @Model.SurName @Model.PatronymicName</p>
-                        <p>Роль у системі: @(string.Join(", ", ViewBag.UserRoles as IList<string> ?? new List<string>()))</p>
-                        <p>Пошта: @Model.Email</p>
+                    <div class="row">
+                        <div class="col">
+                            <div class="card-text">
+                                <p>ПІБ: @Model.Name @Model.SurName @Model.PatronymicName</p>
+                                <p>Роль у системі: @(string.Join(", ", ViewBag.UserRoles as IList<string> ?? new List<string>()))</p>
+                                <p>Пошта: @Model.Email</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card-text">
+                                <p>Позиція: @Model.Position</p>
+                                <p>Статус: @(Model.IsActive ? "Активний" : "Неактивний")</p>
+                                <p>Дата прийому на посаду @Model.EmploymentDate.ToString("d")</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

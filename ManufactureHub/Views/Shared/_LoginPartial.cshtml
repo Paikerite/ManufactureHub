@@ -15,7 +15,7 @@
     <div class="dropdown login-partial">
         <a class="d-flex align-items-center text-decoration-none dropdown-toggle" asp-area="" asp-controller="Account" asp-action="Details" asp-route-id="@CurrentUser.Id" data-bs-toggle="dropdown">
             <img src="~/@CurrentUser.ProfilePicture" alt="" width="32" height="32" class="rounded-circle me-2 login-icon">
-            <strong class="sidebar-text">@CurrentUser.SurName[0]. @CurrentUser.Name[0]. @CurrentUser.PatronymicName</strong>
+            <strong class="sidebar-text">@CurrentUser.SurName @CurrentUser.Name[0]. @CurrentUser.PatronymicName[0].</strong>
         </a>
         @*             <a href="#" class="d-flex align-items-center btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--bs-primary); border-color:var(--bs-primary); color:black;">
             </a> *@

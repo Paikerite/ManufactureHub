@@ -38,11 +38,38 @@ namespace ManufactureHub.Controllers
 
         //GET: User
         [Authorize(Roles = "Admin,HeadFacility")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchinput) //int page = 1, int pageSize = 10
         {
             if (userManager.Users != null)
             {
-                var users = await userManager.Users.OrderBy(us=>us.SurName).ToListAsync();
+                var query = userManager.Users.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(searchinput))
+                {
+                    var searchLower = searchinput.Trim().ToLower();
+                    // Case-insensitive search across multiple fields
+                    query = query.Where(u => u.Name.ToLower().Contains(searchLower) ||
+                                     u.SurName.ToLower().Contains(searchLower) ||
+                                     u.PatronymicName.ToLower().Contains(searchLower) ||
+                                     u.Position.ToLower().Contains(searchLower));
+                }
+
+                // Pagination
+                //var users = await query
+                //    .OrderBy(u => u.SurName) // Optional: Sort by surname
+                //    .Skip((page - 1) * pageSize)
+                //    .Take(pageSize)
+                //    .ToListAsync();
+
+                var users = await query.OrderBy(u => u.SurName)
+                    .ToListAsync();
+
+                // Pass data to the view
+                ViewBag.SearchInput = searchinput; // Preserve search input
+                //ViewBag.CurrentPage = page;
+                //ViewBag.TotalPages = (int)Math.Ceiling((double)await query.CountAsync() / pageSize);
+
+                //var users = await userManager.Users.OrderBy(us=>us.SurName).ToListAsync();
                 var userRoles = new Dictionary<int, IList<string>>();
                 var ListRoles = new List<string>();
 
@@ -78,6 +105,12 @@ namespace ManufactureHub.Controllers
             }
         }
 
+        // GET User/Бачев
+        [Authorize(Roles = "Admin,HeadFacility")]
+        public IActionResult SearchUser(string searchinput)
+        {
+            return RedirectToAction("Index", new { searchinput });
+        }
 
         // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -319,7 +352,7 @@ namespace ManufactureHub.Controllers
                     EmploymentDate = DateTime.Today,
                     LastLoginDate = DateTime.Now,
                     LastLoginIP = "0.0.0.0",
-                    EmailConfirmed  = true,
+                    EmailConfirmed = true,
                 };
 
                 var result = await userManager.CreateAsync(user, userAccountViewModel.Password!);

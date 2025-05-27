@@ -8,13 +8,14 @@ namespace ManufactureHub.Models
     public class TaskModelPost
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Необхідна назва завдання")]
+        [MinLength(3, ErrorMessage = "Мінімальна кількість символів 3")]
         [MaxLength(256, ErrorMessage = "Максимальна кількість символів 256")]
         public string Name { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Необхідний опис завдання")]
         [DataType(DataType.MultilineText)]
-        [MinLength(5)]
-        [MaxLength(1024)]
+        [MinLength(5, ErrorMessage = "Мінімальна кількість символів 3")]
+        [MaxLength(1024, ErrorMessage = "Максимальна кількість символів 1024")]
         public string Description { get; set; }
 
         [DataType(DataType.DateTime)]

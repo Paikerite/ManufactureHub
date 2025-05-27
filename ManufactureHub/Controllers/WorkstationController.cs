@@ -51,7 +51,7 @@ namespace ManufactureHub.Controllers
                 return NotFound();
             }
 
-            ViewBag.TeamLeadUser = await userManager.FindByIdAsync(workstationViewModel.Id.ToString());
+            ViewBag.TeamLeadUser = await userManager.FindByIdAsync(workstationViewModel.IdTeamLead.ToString());
 
             return View(workstationViewModel);
         }
